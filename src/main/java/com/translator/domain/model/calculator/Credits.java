@@ -11,6 +11,10 @@ public class Credits {
         return new Credits(amount);
     }
 
+    public String amount() {
+        return amount.toString();
+    }
+
     public Credits multipliedBy(Integer amount) {
         return new Credits(this.amount * amount);
     }

@@ -27,10 +27,14 @@ public class RomanNumeralValidator implements Validator {
         if (valid == false) return false;
         if (validators.isEmpty()) return true;
 
-        boolean isValid = validators.get(0).validate(numerals);
+        boolean isValid = head(validators).validate(numerals);
 
         return validateRomanNumerals(isValid, numerals, tail(validators));
 
+    }
+
+    private Validator head(List<Validator> validators) {
+        return validators.get(0);
     }
 
     private List<Validator> tail(List<Validator> validators) {

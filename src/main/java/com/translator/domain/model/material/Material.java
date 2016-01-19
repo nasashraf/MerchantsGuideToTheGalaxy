@@ -15,6 +15,10 @@ public class Material {
         return new Material(name, credits);
     }
 
+    public String name() {
+        return name;
+    }
+
     public Credits cost() {
         return credits;
     }

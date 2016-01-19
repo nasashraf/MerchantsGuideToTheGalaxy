@@ -29,6 +29,10 @@ public class RomanNumeralAmount {
         return new RomanNumeralAmount(asList(numerals));
     }
 
+    public static RomanNumeralAmount aRomanNumeralAmount(List<RomanNumeral> numerals) {
+        return new RomanNumeralAmount(numerals);
+    }
+
     public Integer decimalValue() {
         return calculateDecimalValue(0, numerals);
     }
@@ -63,4 +67,19 @@ public class RomanNumeralAmount {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RomanNumeralAmount)) return false;
+
+        RomanNumeralAmount that = (RomanNumeralAmount) o;
+
+        return numerals.equals(that.numerals);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return numerals.hashCode();
+    }
 }
