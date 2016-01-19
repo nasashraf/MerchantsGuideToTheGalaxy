@@ -82,4 +82,11 @@ public class RomanNumeralAmount {
     public int hashCode() {
         return numerals.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "RomanNumeralAmount{" +
+                "numerals=" + numerals +
+                '}';
+    }
 }

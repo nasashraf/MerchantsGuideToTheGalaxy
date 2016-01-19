@@ -5,6 +5,8 @@ import com.translator.domain.model.calculator.Credits;
 import com.translator.domain.model.calculator.CreditsCalculator;
 import com.translator.domain.model.material.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
+import com.translator.domain.model.validation.RomanNumeralValidator;
+import com.translator.domain.model.validation.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +26,13 @@ public class IntergalacticTranslator {
     private Map<String, RomanNumeral> intergalacticToRoman;
     private Map<String, Material> materialsByName;
     private Calculator creditsCalculator;
+    private Validator validator;
 
     public IntergalacticTranslator(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {
         this.intergalacticToRoman = intergalacticToRoman;
         this.materialsByName = materialsByName;
         this.creditsCalculator = new CreditsCalculator();
+        this.validator = new RomanNumeralValidator();
     }
 
     public String translate(String question) {
@@ -79,6 +83,10 @@ public class IntergalacticTranslator {
     private List<RomanNumeral> romanNumeralsFrom(String intergalacticQuantitiesText) {
         List<RomanNumeral> numeralQuantities = new ArrayList<RomanNumeral>();
 
+        if (!validator.validate(numeralQuantities)) {
+            throw new TranslationException();
+        }
+
         List<String> quantities = asList(intergalacticQuantitiesText.split(SINGLE_WHITE_SPACE));
 
         for(String intergalacticQuantity : quantities) {
@@ -96,6 +104,10 @@ public class IntergalacticTranslator {
 
     protected void setCalculator(Calculator calculator) {
         this.creditsCalculator = calculator;
+    }
+
+    protected void setValidator(Validator validator) {
+        this.validator = validator;
     }
 
     public class TranslationException extends RuntimeException { }

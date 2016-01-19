@@ -17,7 +17,7 @@ import static org.hamcrest.core.Is.is;
 public class MaterialPricePerUnitTest {
 
     @Test public void
-    pricePerUnitIsCreditsAmount_WhenAmountOfMaterialIsOne() {
+    pricePerUnitExpressedInCredits_WhenAmountOfMaterialIsOne() {
         assertThat(aMaterialCalled("Silver").ofQuantity(I).andTotalWorthOf(credits(34.0)), is(aMaterial("Silver", credits(34.0))));
         assertThat(aMaterialCalled("Silver").ofQuantity(I,I).andTotalWorthOf(credits(34.0)), is(aMaterial("Silver", credits(17.0))));
         assertThat(aMaterialCalled("Silver").ofQuantity(I,I).andTotalWorthOf(credits(17.0)), is(aMaterial("Silver", credits(8.5))));
