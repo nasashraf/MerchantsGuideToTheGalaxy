@@ -4,6 +4,8 @@ import com.translator.domain.model.calculator.Credits;
 import com.translator.domain.model.material.Material;
 import com.translator.domain.model.material.MaterialPricePerUnit;
 import com.translator.domain.model.numeral.RomanNumeral;
+import com.translator.domain.model.validation.RomanNumeralValidator;
+import com.translator.domain.model.validation.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +21,12 @@ public class MaterialsAdapter {
     public static final int TOTAL_CREDITS_COST_POS = 1;
     private final Map<String, RomanNumeral> intergalacticToRoman;
     private MaterialPricePerUnit materialPricePerUnit;
+    private Validator validator;
 
     public MaterialsAdapter(Map<String, RomanNumeral> intergalacticToRoman) {
         this.intergalacticToRoman = intergalacticToRoman;
         materialPricePerUnit = new MaterialPricePerUnit();
+        validator = new RomanNumeralValidator();
     }
 
     public Material createMaterialBasedOnPricePerUnit(final String materialCostTranslation) {
@@ -32,6 +36,10 @@ public class MaterialsAdapter {
         String materialName = materialNameFrom(quantityAndMaterial);
         List<RomanNumeral> numerals = romanNumeralQuantityFrom(quantityAndMaterial);
         Credits amountInCredits = getCreditsFrom(materialAmountAndTotalCostElements);
+
+        if (!validator.validate(numerals)) {
+            throw new MaterialsAdapterException();
+        }
 
         Material material = materialPricePerUnit.material(numerals, materialName, amountInCredits);
 
@@ -84,4 +92,9 @@ public class MaterialsAdapter {
         this.materialPricePerUnit = materialPricePerUnit;
     }
 
+    protected void setValidator(Validator validator) {
+        this.validator = validator;
+    }
+
+    public class MaterialsAdapterException  extends RuntimeException { }
 }

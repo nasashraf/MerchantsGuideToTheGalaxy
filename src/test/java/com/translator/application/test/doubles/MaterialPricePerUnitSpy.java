@@ -14,9 +14,6 @@ public class MaterialPricePerUnitSpy extends MaterialPricePerUnit {
     private String materialName;
     private Credits cost;
 
-    public MaterialPricePerUnitSpy(Material material) {
-        this.material = material;
-    }
 
     @Override
     public Material material(List<RomanNumeral> romanNumerals, String materialName, Credits cost) {
@@ -25,6 +22,10 @@ public class MaterialPricePerUnitSpy extends MaterialPricePerUnit {
         this.cost = cost;
 
         return material;
+    }
+
+    public void setMaterial(Material materialStub) {
+        this.material = materialStub;
     }
 
     public List<RomanNumeral> romanNumerals() {

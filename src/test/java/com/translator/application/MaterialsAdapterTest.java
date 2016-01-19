@@ -1,6 +1,7 @@
 package com.translator.application;
 
 import com.translator.application.test.doubles.MaterialPricePerUnitSpy;
+import com.translator.application.test.doubles.ValidatorSpy;
 import com.translator.domain.model.material.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
 import org.junit.Before;
@@ -23,7 +24,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 
 public class MaterialsAdapterTest {
 
-    public static final List<RomanNumeral> ROMAN_ONE = asList(I);
+    private static final List<RomanNumeral> ROMAN_ONE = asList(I);
     private static final List<RomanNumeral> I_I = asList(I, I);
     private static final List<RomanNumeral> L_X_I_V = asList(L,X,I,V);
     private static final String SILVER = "Silver";
@@ -40,30 +41,40 @@ public class MaterialsAdapterTest {
 
 
     private MaterialsAdapter materialsAdapter;
+    private MaterialPricePerUnitSpy materialPricePerUnitSpy;
+    private ValidatorSpy validatorSpy;
 
     @Before
     public void createSUT() {
         materialsAdapter = new MaterialsAdapter(INTERGALACTIC_TO_ROMAN);
-
+        materialPricePerUnitSpy = new MaterialPricePerUnitSpy();
+        validatorSpy = new ValidatorSpy();
+        materialsAdapter.setMaterialPricePerUnit(materialPricePerUnitSpy);
+        materialsAdapter.setValidator(validatorSpy);
     }
 
     @Test public void
     correctMaterialCreated_WhenASingleQuantityIsSpecified() {
-        MaterialPricePerUnitSpy materialPricePerUnitSpy = new MaterialPricePerUnitSpy(aMaterial("Silver", credits(34.0)));
-        materialsAdapter.setMaterialPricePerUnit(materialPricePerUnitSpy);
+        String materialCostText = MaterialCostTextBuilder.aMaterialCostTextBuilder()
+                .withQuantity("glob")
+                .withMaterialName(SILVER)
+                .withCreditsAmount(parseInt(TOTAL_COST))
+                .build();
 
-        Material material = materialsAdapter.createMaterialBasedOnPricePerUnit("glob Silver is 34 Credits");
+        Material responseStub = aMaterial("Silver", credits(34.0));
+        materialPricePerUnitSpy.setMaterial(responseStub);
+        validatorSpy.setValidationResult(true);
 
-        assertThat(material, is(aMaterial("Silver", credits(34.0))));
+        Material material = materialsAdapter.createMaterialBasedOnPricePerUnit(materialCostText);
 
+        assertThat(material, is(responseStub));
         assertThat(materialPricePerUnitSpy.romanNumerals(), equalTo(ROMAN_ONE));
-
         assertThat(materialPricePerUnitSpy.materialName(), equalTo("Silver"));
         assertThat(materialPricePerUnitSpy.cost(), equalTo(credits(34.0)));
     }
 
     @Test public void
-    correctMaterialCreated_WhenAQuantityOfTwoIsSpecified() {
+    correctMaterialCreated_WhenAQuantityOfTwoInCorrectOrderIsSpecified() {
         String materialCostText = MaterialCostTextBuilder.aMaterialCostTextBuilder()
                                             .withQuantity("glob")
                                             .withQuantity("glob")
@@ -72,9 +83,8 @@ public class MaterialsAdapterTest {
                                             .build();
 
         Material responseStub = aMaterial(SILVER, credits(17.0));
-        MaterialPricePerUnitSpy materialPricePerUnitSpy = new MaterialPricePerUnitSpy(responseStub);
-
-        materialsAdapter.setMaterialPricePerUnit(materialPricePerUnitSpy);
+        materialPricePerUnitSpy.setMaterial(responseStub);
+        validatorSpy.setValidationResult(true);
 
         Material material = materialsAdapter.createMaterialBasedOnPricePerUnit(materialCostText);
 
@@ -85,7 +95,7 @@ public class MaterialsAdapterTest {
     }
 
     @Test public void
-    correctMaterialCreated_WhenALargeQuantityIsSpecified() {
+    correctMaterialCreated_WhenALargeQuantityInOrderIsSpecified() {
         String materialCostText = MaterialCostTextBuilder.aMaterialCostTextBuilder()
                 .withQuantity("teji")
                 .withQuantity("pish")
@@ -96,9 +106,8 @@ public class MaterialsAdapterTest {
                 .build();
 
         Material responseStub = aMaterial(GOLD, credits(2.0));
-        MaterialPricePerUnitSpy materialPricePerUnitSpy = new MaterialPricePerUnitSpy(responseStub);
-
-        materialsAdapter.setMaterialPricePerUnit(materialPricePerUnitSpy);
+        materialPricePerUnitSpy.setMaterial(responseStub);
+        validatorSpy.setValidationResult(true);
 
         Material material = materialsAdapter.createMaterialBasedOnPricePerUnit(materialCostText);
 
@@ -106,6 +115,23 @@ public class MaterialsAdapterTest {
         assertThat(materialPricePerUnitSpy.romanNumerals(), equalTo(L_X_I_V));
         assertThat(materialPricePerUnitSpy.materialName(), equalTo(GOLD));
         assertThat(materialPricePerUnitSpy.cost(), equalTo(credits(parseDouble(ONE_HUNDRED_TWENTY_EIGHT))));
+    }
+
+    @Test(expected = MaterialsAdapter.MaterialsAdapterException.class)
+    public void materialsAdapterException_WhenQuantitySpecifiedHasInvalidOrder() {
+        String materialCostText = MaterialCostTextBuilder.aMaterialCostTextBuilder()
+                .withQuantity("glob")
+                .withQuantity("prok")
+                .withQuantity("pish")
+                .withMaterialName(GOLD)
+                .withCreditsAmount(parseInt(ONE_HUNDRED_TWENTY_EIGHT))
+                .build();
+
+        Material responseStub = aMaterial(GOLD, credits(2.0));
+        materialPricePerUnitSpy.setMaterial(responseStub);
+        validatorSpy.setValidationResult(false);
+
+        materialsAdapter.createMaterialBasedOnPricePerUnit(materialCostText);
     }
 
     private static class MaterialCostTextBuilder {
