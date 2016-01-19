@@ -19,6 +19,7 @@ public class IntergalacticTranslator {
 
     public static final String EXTRACT_QUANTITY_AND_MATERIAL_NAME = "(?<=\\sis\\s)(.*)[^?]";
     public static final String SINGLE_WHITE_SPACE = " ";
+    public static final Object DOES_NOT_EXIST = null;
 
     private Map<String, RomanNumeral> intergalacticToRoman;
     private Map<String, Material> materialsByName;
@@ -31,14 +32,7 @@ public class IntergalacticTranslator {
     }
 
     public String translate(String question) {
-        Pattern quantityAndMaterialNameRegexPattern = Pattern.compile(EXTRACT_QUANTITY_AND_MATERIAL_NAME);
-        Matcher matcher = quantityAndMaterialNameRegexPattern.matcher(question);
-
-        if (!matcher.find()) {
-            return "I have no idea what you are talking about";
-        }
-
-        String quantityAndMaterialText = matcher.group().trim();
+        String quantityAndMaterialText = extractQuantityAndMaterialTextFrom(question);
 
         String materialName = materialNameFrom(quantityAndMaterialText);
         Material material = getMaterialUsing(materialName);
@@ -49,6 +43,17 @@ public class IntergalacticTranslator {
         Credits worth = creditsCalculator.calculate(aRomanNumeralAmount(numeralQuantities), material);
 
         return quantitiesText + " " + materialName + " is " + worth.amount() + " Credits";
+    }
+
+    private String extractQuantityAndMaterialTextFrom(String question) {
+        Pattern quantityAndMaterialNameRegexPattern = Pattern.compile(EXTRACT_QUANTITY_AND_MATERIAL_NAME);
+        Matcher matcher = quantityAndMaterialNameRegexPattern.matcher(question);
+
+        if (!matcher.find()) {
+            throw new TranslationException();
+        }
+
+        return matcher.group().trim();
     }
 
     private String materialNameFrom(String quantityAndMaterialText) {
@@ -62,7 +67,13 @@ public class IntergalacticTranslator {
     }
 
     private Material getMaterialUsing(String materialName) {
-        return materialsByName.get(materialName);
+        Material material = materialsByName.get(materialName);
+
+        if (material == DOES_NOT_EXIST) {
+            throw new TranslationException();
+        }
+
+        return material;
     }
 
     private List<RomanNumeral> romanNumeralsFrom(String intergalacticQuantitiesText) {
@@ -72,16 +83,20 @@ public class IntergalacticTranslator {
 
         for(String intergalacticQuantity : quantities) {
             RomanNumeral romanNumeral = intergalacticToRoman.get(intergalacticQuantity);
+
+            if (romanNumeral == DOES_NOT_EXIST) {
+                throw new TranslationException();
+            }
+
             numeralQuantities.add(romanNumeral);
         }
 
         return numeralQuantities;
     }
 
-
     protected void setCalculator(Calculator calculator) {
         this.creditsCalculator = calculator;
     }
 
-
+    public class TranslationException extends RuntimeException { }
 }
