@@ -31,6 +31,7 @@ public class MaterialsAdapterTest {
     private static final String GOLD = "Gold";
     private static final String TOTAL_COST = "34";
     private static final String ONE_HUNDRED_TWENTY_EIGHT = "128";
+    private static final String TWO_HUNDRED = "200";
 
     private static final Map<String, RomanNumeral> INTERGALACTIC_TO_ROMAN = new HashMap<String, RomanNumeral>() {{
         put("glob", I);
@@ -39,10 +40,11 @@ public class MaterialsAdapterTest {
         put("teji", L);
     }};
 
-
     private MaterialsAdapter materialsAdapter;
     private MaterialPricePerUnitSpy materialPricePerUnitSpy;
     private ValidatorSpy validatorSpy;
+
+    private List<String> materialCosts;
 
     @Before
     public void createSUT() {
@@ -51,6 +53,7 @@ public class MaterialsAdapterTest {
         validatorSpy = new ValidatorSpy();
         materialsAdapter.setMaterialPricePerUnit(materialPricePerUnitSpy);
         materialsAdapter.setValidator(validatorSpy);
+        materialCosts = new ArrayList<String>();
     }
 
     @Test public void
@@ -61,16 +64,24 @@ public class MaterialsAdapterTest {
                 .withCreditsAmount(parseInt(TOTAL_COST))
                 .build();
 
-        Material responseStub = aMaterial("Silver", credits(34.0));
-        materialPricePerUnitSpy.setMaterial(responseStub);
+        materialCosts.add(materialCostText);
+
+        final Material materialStub = aMaterial(SILVER, credits(34.0));
+        Map<String,Material> responseStub = new HashMap<String, Material>() {{
+            put(SILVER, materialStub);
+
+        }};
+
+        materialPricePerUnitSpy.setMaterials(responseStub);
         validatorSpy.setValidationResult(true);
 
-        Material material = materialsAdapter.createMaterialBasedOnPricePerUnit(materialCostText);
+        Map<String, Material> materials = materialsAdapter.createMaterialBasedOnPricePerUnit(materialCosts);
 
-        assertThat(material, is(responseStub));
-        assertThat(materialPricePerUnitSpy.romanNumerals(), equalTo(ROMAN_ONE));
-        assertThat(materialPricePerUnitSpy.materialName(), equalTo("Silver"));
-        assertThat(materialPricePerUnitSpy.cost(), equalTo(credits(34.0)));
+        assertThat(materials.size(), is(1));
+        assertThat(materials.get(SILVER), is(materialStub));
+        assertThat(materialPricePerUnitSpy.romanNumerals(), equalTo(asList(ROMAN_ONE)));
+        assertThat(materialPricePerUnitSpy.materialName(), equalTo(asList(SILVER)));
+        assertThat(materialPricePerUnitSpy.cost(), equalTo(asList(credits(34.0))));
     }
 
     @Test public void
@@ -82,16 +93,24 @@ public class MaterialsAdapterTest {
                                             .withCreditsAmount(parseInt(TOTAL_COST))
                                             .build();
 
-        Material responseStub = aMaterial(SILVER, credits(17.0));
-        materialPricePerUnitSpy.setMaterial(responseStub);
+        materialCosts.add(materialCostText);
+
+        final Material materialStub = aMaterial(SILVER, credits(17.0));
+        Map<String,Material> responseStub = new HashMap<String, Material>() {{
+            put(SILVER, materialStub);
+
+        }};
+
+        materialPricePerUnitSpy.setMaterials(responseStub);
         validatorSpy.setValidationResult(true);
 
-        Material material = materialsAdapter.createMaterialBasedOnPricePerUnit(materialCostText);
+        Map<String, Material> material = materialsAdapter.createMaterialBasedOnPricePerUnit(materialCosts);
 
-        assertThat(material, is(responseStub));
-        assertThat(materialPricePerUnitSpy.romanNumerals(), equalTo(I_I));
-        assertThat(materialPricePerUnitSpy.materialName(), equalTo(SILVER));
-        assertThat(materialPricePerUnitSpy.cost(), equalTo(credits(parseDouble(TOTAL_COST))));
+        assertThat(material.size(), is(1));
+        assertThat(material.get(SILVER), is(materialStub));
+        assertThat(materialPricePerUnitSpy.romanNumerals(), equalTo(asList(I_I)));
+        assertThat(materialPricePerUnitSpy.materialName(), equalTo(asList(SILVER)));
+        assertThat(materialPricePerUnitSpy.cost(), equalTo(asList(credits(parseDouble(TOTAL_COST)))));
     }
 
     @Test public void
@@ -104,17 +123,66 @@ public class MaterialsAdapterTest {
                 .withMaterialName(GOLD)
                 .withCreditsAmount(parseInt(ONE_HUNDRED_TWENTY_EIGHT))
                 .build();
+        materialCosts.add(materialCostText);
 
-        Material responseStub = aMaterial(GOLD, credits(2.0));
-        materialPricePerUnitSpy.setMaterial(responseStub);
+        final Material materialStub = aMaterial(GOLD, credits(2.0));
+        Map<String,Material> responseStub = new HashMap<String, Material>() {{
+            put(GOLD, materialStub);
+
+        }};
+
+        materialPricePerUnitSpy.setMaterials(responseStub);
         validatorSpy.setValidationResult(true);
 
-        Material material = materialsAdapter.createMaterialBasedOnPricePerUnit(materialCostText);
+        Map<String, Material> material = materialsAdapter.createMaterialBasedOnPricePerUnit(materialCosts);
 
-        assertThat(material, is(responseStub));
-        assertThat(materialPricePerUnitSpy.romanNumerals(), equalTo(L_X_I_V));
-        assertThat(materialPricePerUnitSpy.materialName(), equalTo(GOLD));
-        assertThat(materialPricePerUnitSpy.cost(), equalTo(credits(parseDouble(ONE_HUNDRED_TWENTY_EIGHT))));
+        assertThat(material.size(), is(1));
+        assertThat(material.get(GOLD), is(materialStub));
+        assertThat(materialPricePerUnitSpy.romanNumerals(), equalTo(asList(L_X_I_V)));
+        assertThat(materialPricePerUnitSpy.materialName(), equalTo(asList(GOLD)));
+        assertThat(materialPricePerUnitSpy.cost(), equalTo(asList(credits(parseDouble(ONE_HUNDRED_TWENTY_EIGHT)))));
+    }
+
+    @Test public void
+    correctMaterialsCreated_WhenMultipleMaterialCostsSpecified() {
+        String materialCostTextGold = MaterialCostTextBuilder.aMaterialCostTextBuilder()
+                .withQuantity("teji")
+                .withQuantity("pish")
+                .withQuantity("glob")
+                .withQuantity("prok")
+                .withMaterialName(GOLD)
+                .withCreditsAmount(parseInt(ONE_HUNDRED_TWENTY_EIGHT))
+                .build();
+
+        String materialCostTextSilver = MaterialCostTextBuilder.aMaterialCostTextBuilder()
+                .withQuantity("glob")
+                .withQuantity("glob")
+                .withMaterialName(SILVER)
+                .withCreditsAmount(parseInt(TWO_HUNDRED))
+                .build();
+
+        materialCosts.add(materialCostTextGold);
+        materialCosts.add(materialCostTextSilver);
+
+        final Material goldStub = aMaterial(GOLD, credits(2.0));
+        final Material silverStub = aMaterial(SILVER, credits(2.0));
+        Map<String,Material> responseStub = new HashMap<String, Material>() {{
+            put(GOLD, goldStub);
+            put(SILVER, silverStub);
+
+        }};
+
+        materialPricePerUnitSpy.setMaterials(responseStub);
+        validatorSpy.setValidationResult(true);
+
+        Map<String, Material> material = materialsAdapter.createMaterialBasedOnPricePerUnit(materialCosts);
+
+        assertThat(material.size(), is(2));
+        assertThat(material.get(GOLD), is(goldStub));
+        assertThat(material.get(SILVER), is(silverStub));
+        assertThat(materialPricePerUnitSpy.romanNumerals(), equalTo(asList(L_X_I_V, I_I)));
+        assertThat(materialPricePerUnitSpy.materialName(), equalTo(asList(GOLD, SILVER)));
+        assertThat(materialPricePerUnitSpy.cost(), equalTo(asList(credits(parseDouble(ONE_HUNDRED_TWENTY_EIGHT)),credits(parseDouble(TWO_HUNDRED)))));
     }
 
     @Test(expected = MaterialsAdapter.MaterialsAdapterException.class)
@@ -126,12 +194,17 @@ public class MaterialsAdapterTest {
                 .withMaterialName(GOLD)
                 .withCreditsAmount(parseInt(ONE_HUNDRED_TWENTY_EIGHT))
                 .build();
+        materialCosts.add(materialCostText);
 
-        Material responseStub = aMaterial(GOLD, credits(2.0));
-        materialPricePerUnitSpy.setMaterial(responseStub);
+        final Material materialStub = aMaterial(GOLD, credits(2.0));
+        Map<String,Material> responseStub = new HashMap<String, Material>() {{
+            put(GOLD, materialStub);
+
+        }};
+        materialPricePerUnitSpy.setMaterials(responseStub);
         validatorSpy.setValidationResult(false);
 
-        materialsAdapter.createMaterialBasedOnPricePerUnit(materialCostText);
+        materialsAdapter.createMaterialBasedOnPricePerUnit(materialCosts);
     }
 
     private static class MaterialCostTextBuilder {

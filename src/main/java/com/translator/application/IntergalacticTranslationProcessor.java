@@ -42,7 +42,6 @@ public class IntergalacticTranslationProcessor {
         this.console = console;
     }
 
-
     protected void setCalculator(Calculator calculator) {
         this.creditsCalculator = calculator;
     }

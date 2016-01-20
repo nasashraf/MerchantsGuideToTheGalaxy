@@ -8,6 +8,7 @@ import com.translator.domain.model.validation.RomanNumeralValidator;
 import com.translator.domain.model.validation.Validator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,21 +30,27 @@ public class MaterialsAdapter {
         validator = new RomanNumeralValidator();
     }
 
-    public Material createMaterialBasedOnPricePerUnit(final String materialCostTranslation) {
-        String[] materialAmountAndTotalCostElements = divideTextByMaterialAmountAndTotalCost(materialCostTranslation);
-        List<String> quantityAndMaterial = getQuantityAndMaterialNameFrom(materialAmountAndTotalCostElements);
+    public Map<String, Material> createMaterialBasedOnPricePerUnit(final List<String> materialCostTranslations) {
 
-        String materialName = materialNameFrom(quantityAndMaterial);
-        List<RomanNumeral> numerals = romanNumeralQuantityFrom(quantityAndMaterial);
-        Credits amountInCredits = getCreditsFrom(materialAmountAndTotalCostElements);
+        Map<String, Material> materials = new HashMap<String, Material>();
 
-        if (!validator.validate(numerals)) {
-            throw new MaterialsAdapterException();
+        for (String materialCostTranslation : materialCostTranslations) {
+            String[] materialAmountAndTotalCostElements = divideTextByMaterialAmountAndTotalCost(materialCostTranslation);
+            List<String> quantityAndMaterial = getQuantityAndMaterialNameFrom(materialAmountAndTotalCostElements);
+
+            String materialName = materialNameFrom(quantityAndMaterial);
+            List<RomanNumeral> numerals = romanNumeralQuantityFrom(quantityAndMaterial);
+            Credits amountInCredits = getCreditsFrom(materialAmountAndTotalCostElements);
+
+            if (!validator.validate(numerals)) {
+                throw new MaterialsAdapterException();
+            }
+
+            Material material = materialPricePerUnit.material(numerals, materialName, amountInCredits);
+            materials.put(materialName, material);
         }
 
-        Material material = materialPricePerUnit.material(numerals, materialName, amountInCredits);
-
-        return material;
+        return materials;
     }
 
     private List<String> getQuantityAndMaterialNameFrom(String[] materialAmountAndCostElements) {
