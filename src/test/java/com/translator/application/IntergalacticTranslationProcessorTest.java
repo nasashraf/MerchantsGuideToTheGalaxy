@@ -49,7 +49,6 @@ public class IntergalacticTranslationProcessorTest {
         intergalacticTranslationProcessor.setConsole(consoleSpy);
         intergalacticTranslationProcessor.setCalculator(calculatorSpy);
         intergalacticTranslationProcessor.setValidator(validatorSpy);
-
     }
 
     @Test public void

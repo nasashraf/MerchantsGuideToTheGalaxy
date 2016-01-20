@@ -1,10 +1,13 @@
 package com.translator.application;
 
 import com.translator.domain.model.calculator.Calculator;
+import com.translator.domain.model.calculator.CreditsCalculator;
 import com.translator.domain.model.material.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
+import com.translator.domain.model.validation.RomanNumeralValidator;
 import com.translator.domain.model.validation.Validator;
 import com.translator.infrastructure.Console;
+import com.translator.infrastructure.Screen;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +24,10 @@ public class IntergalacticTranslationProcessor {
     public IntergalacticTranslationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material > materialsByName) {
         this.intergalacticToRoman = intergalacticToRoman;
         this.materialsByName = materialsByName;
+
+        creditsCalculator = new CreditsCalculator();
+        validator = new RomanNumeralValidator();
+        console = new Screen();
     }
 
     public void process(List<String> questions) {

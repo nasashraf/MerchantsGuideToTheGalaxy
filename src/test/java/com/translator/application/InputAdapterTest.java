@@ -1,9 +1,6 @@
 package com.translator.application;
 
-import com.translator.application.test.doubles.InputCategoriserSpy;
-import com.translator.application.test.doubles.IntergalacticToRomanAdapterSpy;
-import com.translator.application.test.doubles.IntergalacticTranslationProcessorSpy;
-import com.translator.application.test.doubles.MaterialsAdapterSpy;
+import com.translator.application.test.doubles.*;
 import com.translator.domain.model.material.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
 import org.junit.Before;
@@ -19,14 +16,17 @@ import static com.translator.domain.model.calculator.Credits.credits;
 import static com.translator.domain.model.material.Material.aMaterial;
 import static com.translator.domain.model.numeral.RomanNumeral.I;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 public class InputAdapterTest {
 
+    public static final String INVALID_ROMAN_NUMERAL = "Z";
     private InputCategoriserSpy inputCategoriserSpy;
     private IntergalacticToRomanAdapterSpy intergalacticToRomanAdapterSpy;
     private MaterialsAdapterSpy materialsAdapterSpy;
     private IntergalacticTranslationProcessorSpy intergalacticTranslationProcessorSpy;
+    private ConsoleSpy consoleSpy;
     private InputAdapter inputAdapter;
 
     @Before
@@ -35,8 +35,10 @@ public class InputAdapterTest {
         materialsAdapterSpy = new MaterialsAdapterSpy(null);
         intergalacticToRomanAdapterSpy = new IntergalacticToRomanAdapterSpy();
         intergalacticTranslationProcessorSpy = new IntergalacticTranslationProcessorSpy(null, null);
+        consoleSpy = new ConsoleSpy();
 
         inputAdapter = new InputAdapterWithStub();
+        inputAdapter.setConsole(consoleSpy);
     }
 
     @Test public void
@@ -56,7 +58,7 @@ public class InputAdapterTest {
         categories.put(QUESTIONS, questions);
 
         Map<String, RomanNumeral> intergalacticToRoman = MapBuilder.<String, RomanNumeral>aMapBuilder().put("glob", I).build();
-        Map<String, Material> materialByName = MapBuilder.<String, Material>aMapBuilder().put("glob", aMaterial("Silver", credits(10.0))).build();
+        Map<String, Material> materialByName = MapBuilder.<String, Material>aMapBuilder().put("Silver", aMaterial("Silver", credits(17.0))).build();
 
         inputCategoriserSpy.setCategoriesStub(categories);
         intergalacticToRomanAdapterSpy.setIntergalacticToRomanStub(intergalacticToRoman);
@@ -73,6 +75,69 @@ public class InputAdapterTest {
         assertThat(intergalacticTranslationProcessorSpy.questionsCalledWith, equalTo(questions));
     }
 
+
+    @Test public void
+    errorMessagereported_WhenFailedToConvertIntergalacticPhraseToValidRomanNumeral() {
+        List<String> input = new ArrayList<String>();
+        input.add("glob is " + INVALID_ROMAN_NUMERAL);
+        input.add("glob glob Silver is 34 Credits");
+        input.add("how many Credits is glob Silver ?");
+
+        List<String> conversions = createList("glob is I");
+        List<String> materials = createList("glob glob Silver is 34 Credits");
+        List<String> questions = createList("how many Credits is glob Silver ?");
+
+        Map<String, List<String>> categories = new HashMap<String, List<String>>();
+        categories.put(CONVERSIONS, conversions);
+        categories.put(MATERIAL_COSTS, materials);
+        categories.put(QUESTIONS, questions);
+
+        inputCategoriserSpy.setCategoriesStub(categories);
+
+        InputAdapterStubWithRomanNumerAdapterExceptions inputAdapterStubWithExceptions = new InputAdapterStubWithRomanNumerAdapterExceptions();
+        inputAdapterStubWithExceptions.setConsole(consoleSpy);
+
+        inputAdapterStubWithExceptions.adaptAndProcess(input);
+
+        assertThat(consoleSpy.outputsWritten, contains("ERROR - failed to convert intergalactic phrase to a valid roman numeral"));
+    }
+
+
+    @Test public void
+    errorMessagereported_WhenFailedToDertmineMaterialCost() {
+        List<String> input = new ArrayList<String>();
+        input.add("glob is I");
+        input.add("glob glob Silver is 34 Credits");
+        input.add("how many Credits is glob Silver ?");
+
+        List<String> conversions = createList("glob is I");
+        List<String> materials = createList("glob glob Silver is 34 Credits");
+        List<String> questions = createList("how many Credits is glob Silver ?");
+
+        Map<String, List<String>> categories = new HashMap<String, List<String>>();
+        categories.put(CONVERSIONS, conversions);
+        categories.put(MATERIAL_COSTS, materials);
+        categories.put(QUESTIONS, questions);
+
+        Map<String, RomanNumeral> intergalacticToRoman = MapBuilder.<String, RomanNumeral>aMapBuilder().put("glob", I).build();
+
+        inputCategoriserSpy.setCategoriesStub(categories);
+        intergalacticToRomanAdapterSpy.setIntergalacticToRomanStub(intergalacticToRoman);
+
+        InputAdapterStubWithMaterialsAdapterExceptions inputAdapterStubWithExceptions = new InputAdapterStubWithMaterialsAdapterExceptions();
+        inputAdapterStubWithExceptions.setConsole(consoleSpy);
+
+        inputAdapterStubWithExceptions.adaptAndProcess(input);
+
+        assertThat(consoleSpy.outputsWritten, contains("ERROR - failed to determine the cost of materials"));
+    }
+
+
+    private List<String> createList(final String element) {
+        return new ArrayList<String>() {{
+            add(element);
+        }};
+    }
 
     private class InputAdapterWithStub extends InputAdapter {
 
@@ -92,6 +157,32 @@ public class InputAdapterTest {
             materialsAdapterSpy.intergalacticToRomanCreatedWith = intergalacticToRoman;
             return materialsAdapterSpy;
         }
+        @Override
+        protected IntergalacticTranslationProcessor createIntergalacticTranslationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {
+            intergalacticTranslationProcessorSpy.intergalacticToRomanCreatedWith = intergalacticToRoman;
+            intergalacticTranslationProcessorSpy.materialsByNameCreatedWith = materialsByName;
+            return intergalacticTranslationProcessorSpy;
+        }
+
+    }
+
+    private class InputAdapterStubWithRomanNumerAdapterExceptions extends InputAdapter {
+
+        @Override
+        protected InputCategoriser createInputCategoriser() {
+            return inputCategoriserSpy;
+        }
+
+        @Override
+        protected IntergalacticToRomanAdapter createIntergalacticToRomanAdapter() {
+            return new IntergalacticToRomanAdapterExceptionStub();
+        }
+
+        @Override
+        protected MaterialsAdapter createMaterialsAdapter(Map<String, RomanNumeral> intergalacticToRoman) {
+            materialsAdapterSpy.intergalacticToRomanCreatedWith = intergalacticToRoman;
+            return materialsAdapterSpy;
+        }
 
         @Override
         protected IntergalacticTranslationProcessor createIntergalacticTranslationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {
@@ -99,12 +190,34 @@ public class InputAdapterTest {
             intergalacticTranslationProcessorSpy.materialsByNameCreatedWith = materialsByName;
             return intergalacticTranslationProcessorSpy;
         }
+
     }
 
-    private List<String> createList(final String element) {
-        return new ArrayList<String>() {{
-            add(element);
-        }};
+
+    private class InputAdapterStubWithMaterialsAdapterExceptions extends InputAdapter {
+
+        @Override
+        protected InputCategoriser createInputCategoriser() {
+            return inputCategoriserSpy;
+        }
+
+        @Override
+        protected IntergalacticToRomanAdapter createIntergalacticToRomanAdapter() {
+            return intergalacticToRomanAdapterSpy;
+        }
+
+        @Override
+        protected MaterialsAdapter createMaterialsAdapter(Map<String, RomanNumeral> intergalacticToRoman) {
+            return new MaterialsAdapterExceptionStub(intergalacticToRoman);
+        }
+
+        @Override
+        protected IntergalacticTranslationProcessor createIntergalacticTranslationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {
+            intergalacticTranslationProcessorSpy.intergalacticToRomanCreatedWith = intergalacticToRoman;
+            intergalacticTranslationProcessorSpy.materialsByNameCreatedWith = materialsByName;
+            return intergalacticTranslationProcessorSpy;
+        }
+
     }
 
 }
