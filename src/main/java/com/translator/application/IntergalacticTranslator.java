@@ -36,17 +36,25 @@ public class IntergalacticTranslator {
     }
 
     public String translate(String question) {
-        String quantityAndMaterialText = extractQuantityAndMaterialTextFrom(question);
+        String output;
 
-        String materialName = materialNameFrom(quantityAndMaterialText);
-        Material material = getMaterialUsing(materialName);
+        try {
+            String quantityAndMaterialText = extractQuantityAndMaterialTextFrom(question);
 
-        String quantitiesText = quantitiesTextFrom(quantityAndMaterialText);
-        List<RomanNumeral> numeralQuantities = romanNumeralsFrom(quantitiesText);
+            String materialName = materialNameFrom(quantityAndMaterialText);
+            Material material = getMaterialUsing(materialName);
 
-        Credits worth = creditsCalculator.calculate(aRomanNumeralAmount(numeralQuantities), material);
+            String quantitiesText = quantitiesTextFrom(quantityAndMaterialText);
+            List<RomanNumeral> numeralQuantities = romanNumeralsFrom(quantitiesText);
 
-        return quantitiesText + " " + materialName + " is " + worth.amount() + " Credits";
+            Credits worth = creditsCalculator.calculate(aRomanNumeralAmount(numeralQuantities), material);
+
+            output = quantitiesText + " " + materialName + " is " + worth.amount() + " Credits";
+        } catch (TranslationException te) {
+            output = "I have no idea what you are talking about";
+        }
+
+        return output;
     }
 
     private String extractQuantityAndMaterialTextFrom(String question) {
@@ -83,9 +91,6 @@ public class IntergalacticTranslator {
     private List<RomanNumeral> romanNumeralsFrom(String intergalacticQuantitiesText) {
         List<RomanNumeral> numeralQuantities = new ArrayList<RomanNumeral>();
 
-        if (!validator.validate(numeralQuantities)) {
-            throw new TranslationException();
-        }
 
         List<String> quantities = asList(intergalacticQuantitiesText.split(SINGLE_WHITE_SPACE));
 
@@ -97,6 +102,10 @@ public class IntergalacticTranslator {
             }
 
             numeralQuantities.add(romanNumeral);
+        }
+
+        if (!validator.validate(numeralQuantities)) {
+            throw new TranslationException();
         }
 
         return numeralQuantities;

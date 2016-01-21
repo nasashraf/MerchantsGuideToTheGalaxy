@@ -13,7 +13,10 @@ import java.util.Map;
 import static com.translator.domain.model.calculator.Credits.credits;
 import static com.translator.domain.model.material.Material.aMaterial;
 import static com.translator.domain.model.numeral.RomanNumeral.*;
+import static com.translator.domain.model.numeral.RomanNumeralAmount.aRomanNumeralAmount;
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
 
 public class IntergalacticTranslatorTest {
@@ -35,8 +38,7 @@ public class IntergalacticTranslatorTest {
         intergalacticTranslator.setValidator(validatorSpy);
     }
 
-    @Test(expected = IntergalacticTranslator.TranslationException.class)
-    public void noAnswer_WhenNoQuestionAsked() {
+    @Test public void noAnswer_WhenNoQuestionAsked() {
         String answer = intergalacticTranslator.translate("");
 
         assertThat(answer, is("I have no idea what you are talking about"));
@@ -53,9 +55,9 @@ public class IntergalacticTranslatorTest {
         String answer = intergalacticTranslator.translate("how many Credits is glob Silver ?");
 
         assertThat(answer, is("glob Silver is 10.0 Credits"));
-//        assertThat(calculatorSpy.romanNumeralAmountCalledWith, is(aRomanNumeralAmount(I)));
-//        assertThat(calculatorSpy.materialCalledWith, is(Material.aMaterial("Silver", credits(10.0))));
-//        assertThat(validatorSpy.romanNumeralsCalledWithInOrder, is(asList(I)));
+        assertThat(calculatorSpy.romanNumeralAmountCalledWith, contains(aRomanNumeralAmount(I)));
+        assertThat(calculatorSpy.materialCalledWith, contains(aMaterial("Silver", credits(10.0))));
+        assertThat(validatorSpy.romanNumeralsCalledWithInOrder, contains(asList(I)));
     }
 
     @Test public void
@@ -70,14 +72,14 @@ public class IntergalacticTranslatorTest {
         String answer = intergalacticTranslator.translate("how many Credits is prok glob Silver ?");
 
         assertThat(answer, is("prok glob Silver is 60.0 Credits"));
-//        assertThat(calculatorSpy.romanNumeralAmountCalledWith, is(aRomanNumeralAmount(V,I)));
-//        assertThat(calculatorSpy.materialCalledWith, is(Material.aMaterial("Silver", credits(10.0))));
-//        assertThat(validatorSpy.romanNumeralsCalledWithInOrder, is(asList(V,I)));
+        assertThat(calculatorSpy.romanNumeralAmountCalledWith, contains(aRomanNumeralAmount(V,I)));
+        assertThat(calculatorSpy.materialCalledWith, contains(Material.aMaterial("Silver", credits(10.0))));
+        assertThat(validatorSpy.romanNumeralsCalledWithInOrder, contains(asList(V,I)));
     }
 
 
-    @Test(expected = IntergalacticTranslator.TranslationException.class)
-    public void translationException_WhenIntergalacticQuantitiesInInvalidOrder() {
+    @Test public void
+    translationException_WhenIntergalacticQuantitiesInInvalidOrder() {
         intergalacticToRoman.put("glob", I);
         intergalacticToRoman.put("prok", V);
         intergalacticToRoman.put("pish", X);
@@ -85,34 +87,42 @@ public class IntergalacticTranslatorTest {
 
         validatorSpy.setValidationResult(false);
 
-        intergalacticTranslator.translate("how many Credits is glob prok pish Silver ?");
+        String answer = intergalacticTranslator.translate("how many Credits is glob prok pish Silver ?");
+
+        assertThat(answer, is("I have no idea what you are talking about"));
     }
 
-    @Test(expected = IntergalacticTranslator.TranslationException.class)
-    public void translationException_WhenMaterialDoesNotExist() {
+    @Test public void
+    translationException_WhenMaterialDoesNotExist() {
         intergalacticToRoman.put("glob", I);
         materialsByName.put("Silver", aMaterial("Silver", credits(10.0)));
 
-        intergalacticTranslator.translate("how many Credits is glob Copper ?");
+        String answer = intergalacticTranslator.translate("how many Credits is glob Copper ?");
+
+        assertThat(answer, is("I have no idea what you are talking about"));
     }
 
-    @Test(expected = IntergalacticTranslator.TranslationException.class)
-    public void translationException_WhenRomanNumeralForIntergalacticQuantityDoesNotExist() {
+    @Test public void
+    translationException_WhenRomanNumeralForIntergalacticQuantityDoesNotExist() {
         intergalacticToRoman.put("prok", V);
         materialsByName.put("Silver", aMaterial("Silver", credits(10.0)));
 
-        intergalacticTranslator.translate("how many Credits is glob Silver ?");
+        String answer = intergalacticTranslator.translate("how many Credits is glob Silver ?");
+
+        assertThat(answer, is("I have no idea what you are talking about"));
     }
 
 
-    @Test(expected = IntergalacticTranslator.TranslationException.class)
-    public void translationException_WhenBadlyFormattedQuestion() {
+    @Test public void
+    translationException_WhenBadlyFormattedQuestion() {
         intergalacticToRoman.put("glob", I);
         materialsByName.put("Silver", aMaterial("Silver", credits(10.0)));
 
         calculatorSpy.setCreditsAmount(credits(10.0));
 
-        intergalacticTranslator.translate("how many Credits is globSilver ?");
+        String answer = intergalacticTranslator.translate("how many Credits is globSilver ?");
+
+        assertThat(answer, is("I have no idea what you are talking about"));
     }
 
 }

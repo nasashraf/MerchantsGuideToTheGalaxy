@@ -10,11 +10,11 @@ import java.util.Map;
 
 import static com.translator.application.InputCategoriser.*;
 
-public class InputAdapter {
+public class InputProcessingService {
 
     private Console console;
 
-    public InputAdapter() {
+    public InputProcessingService() {
         this.console = new Screen();
     }
 

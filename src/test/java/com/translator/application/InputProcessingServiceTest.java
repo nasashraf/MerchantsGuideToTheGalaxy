@@ -19,7 +19,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.IsEqual.equalTo;
 
-public class InputAdapterTest {
+public class InputProcessingServiceTest {
 
     public static final String INVALID_ROMAN_NUMERAL = "Z";
     private InputCategoriserSpy inputCategoriserSpy;
@@ -27,7 +27,7 @@ public class InputAdapterTest {
     private MaterialsAdapterSpy materialsAdapterSpy;
     private IntergalacticTranslationProcessorSpy intergalacticTranslationProcessorSpy;
     private ConsoleSpy consoleSpy;
-    private InputAdapter inputAdapter;
+    private InputProcessingService inputAdapter;
 
     @Before
     public void createSUT() {
@@ -139,7 +139,7 @@ public class InputAdapterTest {
         }};
     }
 
-    private class InputAdapterWithStub extends InputAdapter {
+    private class InputAdapterWithStub extends InputProcessingService {
 
         @Override
         protected InputCategoriser createInputCategoriser() {
@@ -166,7 +166,7 @@ public class InputAdapterTest {
 
     }
 
-    private class InputAdapterStubWithRomanNumerAdapterExceptions extends InputAdapter {
+    private class InputAdapterStubWithRomanNumerAdapterExceptions extends InputProcessingService {
 
         @Override
         protected InputCategoriser createInputCategoriser() {
@@ -194,7 +194,7 @@ public class InputAdapterTest {
     }
 
 
-    private class InputAdapterStubWithMaterialsAdapterExceptions extends InputAdapter {
+    private class InputAdapterStubWithMaterialsAdapterExceptions extends InputProcessingService {
 
         @Override
         protected InputCategoriser createInputCategoriser() {

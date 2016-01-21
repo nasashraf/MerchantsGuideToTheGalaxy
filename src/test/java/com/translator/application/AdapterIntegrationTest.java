@@ -38,16 +38,16 @@ public class AdapterIntegrationTest {
         input.add("glob glob Silver is 34 Credits");
         input.add("how many Credits is glob Silver ?");
 
-        InputAdapter inputAdapter = new InputAdapterWithStub();
+        InputProcessingService inputAdapter = new InputAdapterWithStub();
         inputAdapter.setConsole(consoleSpy);
 
         inputAdapter.adaptAndProcess(input);
 
         Map<String, RomanNumeral> expectedIntergalacticToRoman = MapBuilder.<String, RomanNumeral>aMapBuilder().put("glob", I).build();
         Map<String, Material> expectedMaterialByName = MapBuilder.<String, Material>aMapBuilder().put("Silver", aMaterial("Silver", credits(17.0))).build();
-        List<String> expctedQuestions = createList("how many Credits is glob Silver ?");
+        List<String> expectedQuestions = createList("how many Credits is glob Silver ?");
 
-        assertThat(questionsGenerated, equalTo(expctedQuestions));
+        assertThat(questionsGenerated, equalTo(expectedQuestions));
         assertThat(intergalacticToRomanGenerated, equalTo(expectedIntergalacticToRoman));
         assertThat(materialsByNameGenerated, equalTo(expectedMaterialByName));
     }
@@ -60,7 +60,7 @@ public class AdapterIntegrationTest {
         input.add("glob glob Silver is 34 Credits");
         input.add("how many Credits is glob Silver ?");
 
-        InputAdapter inputAdapter = new InputAdapterWithStub();
+        InputProcessingService inputAdapter = new InputAdapterWithStub();
         inputAdapter.setConsole(consoleSpy);
 
         inputAdapter.adaptAndProcess(input);
@@ -74,7 +74,7 @@ public class AdapterIntegrationTest {
         }};
     }
 
-    private class InputAdapterWithStub extends InputAdapter {
+    private class InputAdapterWithStub extends InputProcessingService {
 
         @Override
         protected IntergalacticTranslationProcessor createIntergalacticTranslationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {

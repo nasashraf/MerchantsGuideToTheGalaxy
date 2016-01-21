@@ -127,8 +127,8 @@ public class IntergalacticTranslationProcessorTest {
 
     }
 
-    @Test(expected = IntergalacticTranslator.TranslationException.class)
-    public void translationException_WhenIntergalacticQuantitiesInInvalidOrder() {
+    @Test public void
+    translationException_WhenIntergalacticQuantitiesInInvalidOrder() {
         intergalacticToRoman.put("glob", I);
         intergalacticToRoman.put("prok", V);
         intergalacticToRoman.put("pish", X);
@@ -138,10 +138,12 @@ public class IntergalacticTranslationProcessorTest {
 
         questions.add("how many Credits is glob prok pish Silver ?");
         intergalacticTranslationProcessor.process(questions);
+
+        assertThat(consoleSpy.outputsWritten, contains("I have no idea what you are talking about"));
     }
 
-    @Test(expected = IntergalacticTranslator.TranslationException.class)
-    public void translationException_WhenMaterialDoesNotExist() {
+    @Test public void
+    translationException_WhenMaterialDoesNotExist() {
         intergalacticToRoman.put("glob", I);
         materialsByName.put("Silver", aMaterial("Silver", credits(10.0)));
 
@@ -149,10 +151,12 @@ public class IntergalacticTranslationProcessorTest {
 
         questions.add("how many Credits is glob Gold ?");
         intergalacticTranslationProcessor.process(questions);
+
+        assertThat(consoleSpy.outputsWritten, contains("I have no idea what you are talking about"));
     }
 
-    @Test(expected = IntergalacticTranslator.TranslationException.class)
-    public void translationException_WhenRomanNumeralForIntergalacticQuantityDoesNotExist() {
+    @Test public void
+    translationException_WhenRomanNumeralForIntergalacticQuantityDoesNotExist() {
         intergalacticToRoman.put("prok", V);
         materialsByName.put("Silver", aMaterial("Silver", credits(10.0)));
 
@@ -160,10 +164,12 @@ public class IntergalacticTranslationProcessorTest {
 
         questions.add("how many Credits is glob Silver ?");
         intergalacticTranslationProcessor.process(questions);
+
+        assertThat(consoleSpy.outputsWritten, contains("I have no idea what you are talking about"));
     }
 
-    @Test(expected = IntergalacticTranslator.TranslationException.class)
-    public void translationException_WhenBadlyFormattedQuestion() {
+    @Test public void
+    translationException_WhenBadlyFormattedQuestion() {
         intergalacticToRoman.put("glob", I);
         materialsByName.put("Silver", aMaterial("Silver", credits(10.0)));
 
@@ -173,5 +179,7 @@ public class IntergalacticTranslationProcessorTest {
 
         questions.add("how many Credits is globSilver ?");
         intergalacticTranslationProcessor.process(questions);
+
+        assertThat(consoleSpy.outputsWritten, contains("I have no idea what you are talking about"));
     }
 }
