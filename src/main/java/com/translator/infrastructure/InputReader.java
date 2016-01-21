@@ -14,6 +14,16 @@ public class InputReader {
         try {
             List<String> input = Files.readAllLines(Paths.get(args[0]));
 
+            System.out.println("Test input:");
+            System.out.println("-----------");
+
+            for(String individualInput : input) {
+                System.out.println(individualInput);
+            }
+
+            System.out.println("\nTest Output:");
+            System.out.println("------------");
+
             InputProcessingService inputProcessingService = new InputProcessingService();
             inputProcessingService.adaptAndProcess(input);
 
