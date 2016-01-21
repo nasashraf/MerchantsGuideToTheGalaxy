@@ -1,6 +1,6 @@
 package com.translator.application.test.doubles;
 
-import com.translator.infrastructure.Console;
+import com.translator.application.Console;
 
 import java.util.ArrayList;
 import java.util.List;

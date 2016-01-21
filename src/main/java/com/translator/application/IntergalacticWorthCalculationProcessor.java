@@ -6,7 +6,6 @@ import com.translator.domain.model.material.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
 import com.translator.domain.model.validation.RomanNumeralValidator;
 import com.translator.domain.model.validation.Validator;
-import com.translator.infrastructure.Console;
 import com.translator.infrastructure.Screen;
 
 import java.util.List;

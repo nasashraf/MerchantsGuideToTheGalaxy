@@ -1,4 +1,4 @@
-package com.translator.infrastructure;
+package com.translator.application;
 
 public interface Console {
 
