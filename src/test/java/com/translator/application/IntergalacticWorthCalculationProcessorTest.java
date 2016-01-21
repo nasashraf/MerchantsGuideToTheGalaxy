@@ -24,10 +24,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
 
-public class IntergalacticTranslationProcessorTest {
+public class IntergalacticWorthCalculationProcessorTest {
 
     private ConsoleSpy consoleSpy;
-    private IntergalacticTranslationProcessor intergalacticTranslationProcessor;
+    private IntergalacticWorthCalculationProcessor intergalacticTranslationProcessor;
     private CalculatorSpy calculatorSpy;
     private ValidatorSpy validatorSpy;
 
@@ -45,7 +45,7 @@ public class IntergalacticTranslationProcessorTest {
         intergalacticToRoman = new HashMap<String, RomanNumeral>();
         materialsByName = new HashMap<String, Material>();
 
-        intergalacticTranslationProcessor = new IntergalacticTranslationProcessor(intergalacticToRoman, materialsByName);
+        intergalacticTranslationProcessor = new IntergalacticWorthCalculationProcessor(intergalacticToRoman, materialsByName);
         intergalacticTranslationProcessor.setConsole(consoleSpy);
         intergalacticTranslationProcessor.setCalculator(calculatorSpy);
         intergalacticTranslationProcessor.setValidator(validatorSpy);
@@ -125,6 +125,25 @@ public class IntergalacticTranslationProcessorTest {
         assertThat(calculatorSpy.materialCalledWith, contains(aMaterial("Silver", credits(10.0))
                                                              ,aMaterial("Gold", credits(20.0))));
 
+    }
+
+    @Test public void
+    answerGiven_WhenQuestionIsForJustRomanNumeralAmount() {
+        intergalacticToRoman.put("glob", I);
+        intergalacticToRoman.put("prok", V);
+
+        calculatorSpy.setCreditsAmount(credits(6.0));
+        validatorSpy.setValidationResult(true);
+
+        questions.add("how much is prok glob ?");
+        intergalacticTranslationProcessor.process(questions);
+
+        assertThat(consoleSpy.outputsWritten.size(), is(1));
+        assertThat(consoleSpy.outputsWritten, contains("prok glob is 6.0"));
+
+        assertThat(calculatorSpy.romanNumeralAmountCalledWith, contains(aRomanNumeralAmount(V,I)));
+        assertThat(calculatorSpy.materialCalledWith, contains(aMaterial("", credits(1.0))));
+        assertThat(validatorSpy.romanNumeralsCalledWithInOrder, contains(asList(V,I)));
     }
 
     @Test public void

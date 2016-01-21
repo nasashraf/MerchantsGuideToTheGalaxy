@@ -12,7 +12,7 @@ import com.translator.infrastructure.Screen;
 import java.util.List;
 import java.util.Map;
 
-public class IntergalacticTranslationProcessor {
+public class IntergalacticWorthCalculationProcessor {
 
     private Map<String, RomanNumeral> intergalacticToRoman;
     private Map<String, Material> materialsByName;
@@ -21,7 +21,7 @@ public class IntergalacticTranslationProcessor {
     private Validator validator;
 
 
-    public IntergalacticTranslationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material > materialsByName) {
+    public IntergalacticWorthCalculationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material > materialsByName) {
         this.intergalacticToRoman = intergalacticToRoman;
         this.materialsByName = materialsByName;
 
@@ -31,16 +31,13 @@ public class IntergalacticTranslationProcessor {
     }
 
     public void process(List<String> questions) {
-        IntergalacticTranslator intergalacticTranslator = new IntergalacticTranslator(intergalacticToRoman, materialsByName);
-        intergalacticTranslator.setCalculator(creditsCalculator);
-        intergalacticTranslator.setValidator(validator);
-
-        if (questions.isEmpty()) {
-            return;
-        }
-
         for (String question : questions) {
-            String answer = intergalacticTranslator.translate(question);
+            AnsweringFactory factory = new AnsweringFactory(creditsCalculator, validator);
+
+            AnsweringService answeringService = factory.create(question, intergalacticToRoman, materialsByName);
+
+            String answer = answeringService.calculateWorth(question);
+
             console.write(answer);
         }
     }

@@ -16,17 +16,17 @@ import static com.translator.domain.model.numeral.RomanNumeral.X;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-public class IntergalacticTranslatorIntegrationTest {
+public class IntergalacticWorthCalculationProcessorIntegrationTest {
 
     private Map<String, RomanNumeral> intergalacticToRoman;
     private Map<String, Material> materialsByName;
-    private IntergalacticTranslator intergalacticTranslator;
+    private AnswerMaterialWorth answerMaterialWorth;
 
     @Before
     public void createSUT() {
         intergalacticToRoman = new HashMap<String, RomanNumeral>();
         materialsByName = new HashMap<String, Material>();
-        intergalacticTranslator = new IntergalacticTranslator(intergalacticToRoman, materialsByName);
+        answerMaterialWorth = new AnswerMaterialWorth(intergalacticToRoman, materialsByName);
     }
 
     @Test
@@ -35,7 +35,7 @@ public class IntergalacticTranslatorIntegrationTest {
         intergalacticToRoman.put("glob", I);
         materialsByName.put("Silver", aMaterial("Silver", credits(10.0)));
 
-        String answer = intergalacticTranslator.translate("how many Credits is glob Silver ?");
+        String answer = answerMaterialWorth.calculateWorth("how many Credits is glob Silver ?");
 
         assertThat(answer, is("glob Silver is 10.0 Credits"));
     }
@@ -47,7 +47,7 @@ public class IntergalacticTranslatorIntegrationTest {
         intergalacticToRoman.put("pish", X);
         materialsByName.put("Silver", aMaterial("Silver", credits(10.0)));
 
-        String answer = intergalacticTranslator.translate("how many Credits is glob prok pish Silver ?");
+        String answer = answerMaterialWorth.calculateWorth("how many Credits is glob prok pish Silver ?");
 
         assertThat(answer, is("I have no idea what you are talking about"));
     }

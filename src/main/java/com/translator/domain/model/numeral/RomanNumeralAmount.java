@@ -9,6 +9,8 @@ public class RomanNumeralAmount {
 
     private static final int AT_FIRST_POSITION = 0;
     private static final int AT_SECOND_POSITION = 1;
+    private static final int NEXT_POSITION = 1;
+    private static final int NEXT_TWO_POSITIONS = 2;
 
     private static final HashMap<List<RomanNumeral>, Integer> SUBTRACTION_NUMERAL_VALUES = new HashMap<List<RomanNumeral>, Integer>(){{
         put(asList(I,V), 4);
@@ -46,10 +48,10 @@ public class RomanNumeralAmount {
 
         List<RomanNumeral> firstPairOfNumerals = asList(firstSymbol,secondSymbol);
 
-        Integer index=1;
+        Integer index= NEXT_POSITION;
         Integer currentTotal = total;
         if (SUBTRACTION_NUMERAL_VALUES.containsKey(firstPairOfNumerals)) {
-            index=2;
+            index= NEXT_TWO_POSITIONS;
             currentTotal += SUBTRACTION_NUMERAL_VALUES.get(firstPairOfNumerals);
         } else {
             currentTotal += firstSymbol.decimalValue();
@@ -81,5 +83,12 @@ public class RomanNumeralAmount {
     @Override
     public int hashCode() {
         return numerals.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "RomanNumeralAmount{" +
+                "numerals=" + numerals +
+                '}';
     }
 }

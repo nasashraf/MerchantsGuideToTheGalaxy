@@ -46,8 +46,8 @@ public class InputProcessingIntegrationTest {
     private class InputAdapterWithConsoleSpy extends InputProcessingService {
 
         @Override
-        protected IntergalacticTranslationProcessor createIntergalacticTranslationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {
-            IntergalacticTranslationProcessor intergalacticTranslationProcessor = new IntergalacticTranslationProcessor(intergalacticToRoman, materialsByName);
+        protected IntergalacticWorthCalculationProcessor intergalacticTranslationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {
+            IntergalacticWorthCalculationProcessor intergalacticTranslationProcessor = new IntergalacticWorthCalculationProcessor(intergalacticToRoman, materialsByName);
             intergalacticTranslationProcessor.setConsole(consoleSpy);
             return intergalacticTranslationProcessor;
         }

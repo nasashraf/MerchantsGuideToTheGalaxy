@@ -77,12 +77,12 @@ public class AdapterIntegrationTest {
     private class InputAdapterWithStub extends InputProcessingService {
 
         @Override
-        protected IntergalacticTranslationProcessor createIntergalacticTranslationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {
+        protected IntergalacticWorthCalculationProcessor intergalacticTranslationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {
             return new IntergalacticTranslationProcessorStub(intergalacticToRoman, materialsByName);
         }
     }
 
-    private class IntergalacticTranslationProcessorStub extends IntergalacticTranslationProcessor {
+    private class IntergalacticTranslationProcessorStub extends IntergalacticWorthCalculationProcessor {
 
         public IntergalacticTranslationProcessorStub(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {
             super(intergalacticToRoman, materialsByName);

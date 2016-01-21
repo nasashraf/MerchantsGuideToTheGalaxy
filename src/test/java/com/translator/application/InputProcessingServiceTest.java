@@ -25,7 +25,7 @@ public class InputProcessingServiceTest {
     private InputCategoriserSpy inputCategoriserSpy;
     private IntergalacticToRomanAdapterSpy intergalacticToRomanAdapterSpy;
     private MaterialsAdapterSpy materialsAdapterSpy;
-    private IntergalacticTranslationProcessorSpy intergalacticTranslationProcessorSpy;
+    private IntergalacticWorthCalculationProcessorSpy intergalacticTranslationProcessorSpy;
     private ConsoleSpy consoleSpy;
     private InputProcessingService inputAdapter;
 
@@ -34,7 +34,7 @@ public class InputProcessingServiceTest {
         inputCategoriserSpy = new InputCategoriserSpy();
         materialsAdapterSpy = new MaterialsAdapterSpy(null);
         intergalacticToRomanAdapterSpy = new IntergalacticToRomanAdapterSpy();
-        intergalacticTranslationProcessorSpy = new IntergalacticTranslationProcessorSpy(null, null);
+        intergalacticTranslationProcessorSpy = new IntergalacticWorthCalculationProcessorSpy(null, null);
         consoleSpy = new ConsoleSpy();
 
         inputAdapter = new InputAdapterWithStub();
@@ -158,7 +158,7 @@ public class InputProcessingServiceTest {
             return materialsAdapterSpy;
         }
         @Override
-        protected IntergalacticTranslationProcessor createIntergalacticTranslationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {
+        protected IntergalacticWorthCalculationProcessor intergalacticTranslationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {
             intergalacticTranslationProcessorSpy.intergalacticToRomanCreatedWith = intergalacticToRoman;
             intergalacticTranslationProcessorSpy.materialsByNameCreatedWith = materialsByName;
             return intergalacticTranslationProcessorSpy;
@@ -185,7 +185,7 @@ public class InputProcessingServiceTest {
         }
 
         @Override
-        protected IntergalacticTranslationProcessor createIntergalacticTranslationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {
+        protected IntergalacticWorthCalculationProcessor intergalacticTranslationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {
             intergalacticTranslationProcessorSpy.intergalacticToRomanCreatedWith = intergalacticToRoman;
             intergalacticTranslationProcessorSpy.materialsByNameCreatedWith = materialsByName;
             return intergalacticTranslationProcessorSpy;
@@ -212,7 +212,7 @@ public class InputProcessingServiceTest {
         }
 
         @Override
-        protected IntergalacticTranslationProcessor createIntergalacticTranslationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {
+        protected IntergalacticWorthCalculationProcessor intergalacticTranslationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {
             intergalacticTranslationProcessorSpy.intergalacticToRomanCreatedWith = intergalacticToRoman;
             intergalacticTranslationProcessorSpy.materialsByNameCreatedWith = materialsByName;
             return intergalacticTranslationProcessorSpy;

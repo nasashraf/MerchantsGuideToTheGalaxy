@@ -23,11 +23,11 @@ public class InputProcessingService {
         try {
             Map<String, List<String>> categories = createInputCategoriser().categorise(input);
 
-            Map<String, RomanNumeral> intergalacticToRoman = createIntergalacticToRomanAdapter().convert(categories.get(CONVERSIONS));
+            Map<String, RomanNumeral> intergalacticToRomanLookup = createIntergalacticToRomanAdapter().convert(categories.get(CONVERSIONS));
 
-            Map<String, Material> materialsByName = createMaterialsAdapter(intergalacticToRoman).createMaterialBasedOnPricePerUnit(categories.get(MATERIAL_COSTS));
+            Map<String, Material> materialsByNameLookup = createMaterialsAdapter(intergalacticToRomanLookup).createMaterialBasedOnPricePerUnit(categories.get(MATERIAL_COSTS));
 
-            createIntergalacticTranslationProcessor(intergalacticToRoman, materialsByName).process(categories.get(QUESTIONS));
+            intergalacticTranslationProcessor(intergalacticToRomanLookup, materialsByNameLookup).process(categories.get(QUESTIONS));
 
         } catch (IntergalacticToRomanAdapter.TranslationException romanAdapterException) {
             console.write("ERROR - failed to convert intergalactic phrase to a valid roman numeral");
@@ -48,8 +48,8 @@ public class InputProcessingService {
         return new MaterialsAdapter(intergalacticToRoman);
     }
 
-    protected IntergalacticTranslationProcessor createIntergalacticTranslationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {
-        return new IntergalacticTranslationProcessor(intergalacticToRoman, materialsByName);
+    protected IntergalacticWorthCalculationProcessor intergalacticTranslationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {
+        return new IntergalacticWorthCalculationProcessor(intergalacticToRoman, materialsByName);
     }
 
     protected void setConsole(Console console) {
