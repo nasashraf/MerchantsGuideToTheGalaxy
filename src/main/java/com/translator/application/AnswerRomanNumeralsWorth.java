@@ -1,6 +1,7 @@
 package com.translator.application;
 
 import com.translator.domain.model.calculator.Credits;
+import com.translator.domain.model.material.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
 
 import java.util.List;
@@ -17,22 +18,33 @@ public class AnswerRomanNumeralsWorth extends AbstractAnsweringService {
     }
 
     public String calculateWorth(String question) {
-        String output;
+        String answer;
 
         try {
             String quantityText = extractQuestionDetails(question);
 
             List<RomanNumeral> numeralQuantities = romanNumeralsFrom(quantityText);
 
-            Credits worth = creditsCalculator().calculate(aRomanNumeralAmount(numeralQuantities), aMaterial("", credits(1.0)));
+            Material material = createMaterial(quantityText);
 
-            output = quantityText + " is " + worth.amount();
+            Credits worth = creditsCalculator().calculate(aRomanNumeralAmount(numeralQuantities), material);
+
+            answer = answerText(quantityText, material.name(), worth.amount());
 
         } catch (TranslationException te) {
-            output = "I have no idea what you are talking about";
+            answer = "I have no idea what you are talking about";
         }
 
-        return output;
+        return answer;
+    }
+
+
+    protected Material createMaterial(String materialDetails) {
+        return aMaterial("", credits(1.0));
+    }
+
+    protected String answerText(String quantities, String materialName, String worthAmount) {
+        return quantities + " " + materialName + "is " + worthAmount;
     }
 
 }

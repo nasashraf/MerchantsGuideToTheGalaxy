@@ -27,19 +27,23 @@ public class AnswerMaterialWorth extends AbstractAnsweringService {
         try {
             String quantityAndMaterialText = extractQuestionDetails(question);
 
-            Material material = materialFrom(quantityAndMaterialText);
+            Material material = createMaterial(quantityAndMaterialText);
 
             String quantitiesText = quantitiesTextFrom(quantityAndMaterialText);
             List<RomanNumeral> numeralQuantities = romanNumeralsFrom(quantitiesText);
 
             Credits worth = creditsCalculator().calculate(aRomanNumeralAmount(numeralQuantities), material);
 
-            answer = quantitiesText + " " + material.name() + " is " + worth.amount() + " Credits";
+            answer = answerText(quantitiesText, material.name(), worth.amount());
         } catch (TranslationException te) {
             answer = "I have no idea what you are talking about";
         }
 
         return answer;
+    }
+
+    protected Material createMaterial(String materialDetails) {
+        return materialFrom(materialDetails);
     }
 
     private Material materialFrom(String quantityAndMaterialText) {
@@ -52,7 +56,6 @@ public class AnswerMaterialWorth extends AbstractAnsweringService {
         return quantityAndMaterialText.trim().substring(materialNamePosInText);
     }
 
-
     private Material getMaterialUsing(String materialName) {
         Material material = materialsByNameLookup.get(materialName);
 
@@ -61,5 +64,10 @@ public class AnswerMaterialWorth extends AbstractAnsweringService {
         }
 
         return material;
+    }
+
+
+    protected String answerText(String quantities, String materialName, String worthAmount) {
+        return quantities + " " + materialName + " is " + worthAmount + " Credits";
     }
 }
