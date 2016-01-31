@@ -35,13 +35,13 @@ public class RomanNumeralAmount {
         return new RomanNumeralAmount(numerals);
     }
 
-    public Integer decimalValue() {
-        return calculateDecimalValue(0, numerals);
+    public Double decimalValue() {
+        return calculateDecimalValue(0.0, numerals);
     }
 
-    private Integer calculateDecimalValue(Integer total, List<RomanNumeral> romanNumerals) {
+    private Double calculateDecimalValue(Double total, List<RomanNumeral> romanNumerals) {
         if (romanNumerals.isEmpty()) return total;
-        if (romanNumerals.size() == 1) return total + romanNumerals.get(0).decimalValue();
+        if (romanNumerals.size() == 1) return total + romanNumerals.get(0).value();
 
         RomanNumeral firstSymbol = getSymbolFom(romanNumerals, AT_FIRST_POSITION);
         RomanNumeral secondSymbol = getSymbolFom(romanNumerals, AT_SECOND_POSITION);
@@ -49,12 +49,12 @@ public class RomanNumeralAmount {
         List<RomanNumeral> firstPairOfNumerals = asList(firstSymbol,secondSymbol);
 
         Integer index= NEXT_POSITION;
-        Integer currentTotal = total;
+        Double currentTotal = total;
         if (SUBTRACTION_NUMERAL_VALUES.containsKey(firstPairOfNumerals)) {
             index= NEXT_TWO_POSITIONS;
             currentTotal += SUBTRACTION_NUMERAL_VALUES.get(firstPairOfNumerals);
         } else {
-            currentTotal += firstSymbol.decimalValue();
+            currentTotal += firstSymbol.value();
         }
 
         return calculateDecimalValue(currentTotal, tailFrom(index, romanNumerals));

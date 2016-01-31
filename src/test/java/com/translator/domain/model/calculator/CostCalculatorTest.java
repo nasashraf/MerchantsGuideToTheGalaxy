@@ -7,7 +7,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static com.translator.domain.model.calculator.Credits.credits;
-import static com.translator.domain.model.numeral.RomanNumeralNew.*;
+import static com.translator.domain.model.numeral.RomanNumeral.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;

@@ -15,11 +15,11 @@ public class Credits {
         return amount.toString();
     }
 
-    public Credits multipliedBy(Integer amount) {
+    public Credits multipliedBy(Double amount) {
         return new Credits(this.amount * amount);
     }
 
-    public Credits dividedBy(Integer decimalAmount) {
+    public Credits dividedBy(Double decimalAmount) {
         return new Credits(amount / decimalAmount);
     }
 

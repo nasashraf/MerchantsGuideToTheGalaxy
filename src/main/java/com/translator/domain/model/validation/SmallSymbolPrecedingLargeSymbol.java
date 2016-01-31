@@ -19,7 +19,7 @@ public class SmallSymbolPrecedingLargeSymbol implements Validator {
         if (romanNumerals.size() <= 2) return true;
 
         boolean result = true;
-        if (romanNumerals.get(AT_FIRST_POSITION).decimalValue() + romanNumerals.get(AT_SECOND_POSITION).decimalValue() < romanNumerals.get(AT_THIRD_POSITION).decimalValue()) {
+        if (romanNumerals.get(AT_FIRST_POSITION).value() + romanNumerals.get(AT_SECOND_POSITION).value() < romanNumerals.get(AT_THIRD_POSITION).value()) {
             result = false;
         }
 
