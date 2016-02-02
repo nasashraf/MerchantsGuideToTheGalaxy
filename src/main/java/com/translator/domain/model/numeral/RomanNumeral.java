@@ -49,6 +49,7 @@ public enum RomanNumeral implements Cost {
     private static List<? extends Cost> canBeSubtractedFrom(RomanNumeral... numerals) {
         return asList(numerals);
     }
+
     private Cost formula(final Cost numeral) {
         final Double val = value();
 

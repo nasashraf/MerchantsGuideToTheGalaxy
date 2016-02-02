@@ -1,12 +1,14 @@
 package com.translator.domain.model.calculator;
 
 import com.translator.domain.model.numeral.Cost;
+import com.translator.domain.model.numeral.MaterialNew;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 
 import java.util.List;
 
 import static com.translator.domain.model.calculator.Credits.credits;
+import static com.translator.domain.model.numeral.MaterialNew.aMaterial;
 import static com.translator.domain.model.numeral.RomanNumeral.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -55,6 +57,32 @@ public class CostCalculatorTest {
         assertThat(costOf(C,D,L,X,X,X,I,X), isWorth(credits(489.0)));
         assertThat(costOf(C,M,X,C,I,X), isWorth(credits(999.0)));
         assertThat(costOf(M,M,M,M,C,M,X,C,I,X), isWorth(credits(4999.0)));
+    }
+
+    @Test public void
+    worthWithMaterialIsValueOfMaterialMultipliedByAmount_ForDifferentAmountsExpressedInRomanNUmerals() {
+        assertThat(costOf(I, materialWorth(2.0)), isWorth(credits(2.0)));
+        assertThat(costOf(V, materialWorth(2.0)), isWorth(credits(10.0)));
+        assertThat(costOf(X, materialWorth(2.0)), isWorth(credits(20.0)));
+        assertThat(costOf(L, materialWorth(2.0)), isWorth(credits(100.0)));
+        assertThat(costOf(C, materialWorth(2.0)), isWorth(credits(200.0)));
+        assertThat(costOf(D, materialWorth(2.0)), isWorth(credits(1000.0)));
+        assertThat(costOf(M, materialWorth(2.0)), isWorth(credits(2000.0)));
+
+
+        assertThat(costOf(I,I, materialWorth(2.0)), isWorth(credits(4.0)));
+        assertThat(costOf(I,V, materialWorth(2.0)), isWorth(credits(8.0)));
+        assertThat(costOf(I,X, materialWorth(2.0)), isWorth(credits(18.0)));
+        assertThat(costOf(X,L, materialWorth(2.0)), isWorth(credits(80.0)));
+        assertThat(costOf(X,C, materialWorth(2.0)), isWorth(credits(180.0)));
+        assertThat(costOf(C,D, materialWorth(2.0)), isWorth(credits(800.0)));
+        assertThat(costOf(C,M, materialWorth(2.0)), isWorth(credits(1800.0)));
+
+        assertThat(costOf(M,M,M,M,C,M,X,C,I,X, materialWorth(5.0)), isWorth(credits(24995.0)));
+    }
+
+    private MaterialNew materialWorth(Double worth) {
+        return aMaterial("", worth);
     }
 
     private Credits costOf(Cost... costs) {

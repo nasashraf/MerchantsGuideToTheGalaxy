@@ -8,20 +8,28 @@ public class CostCalculator {
 
     public Credits calculate(List<? extends Cost> elements) {
 
-        return new Credits(calcCost(elements.get(0), elements.get(0).operation(0.0), elements.subList(1, elements.size())));
+        return new Credits(calcCost(head(elements), head(elements).operation(0.0), tail(elements)));
     }
 
     private Double calcCost(Cost current, Double result, List<? extends Cost> costs) {
         if (costs.isEmpty()) return result;
 
         if (costs.size() == 1) {
-            Cost more = current.next(costs.get(0));
+            Cost more = current.next(head(costs));
             return more.operation(result);
         }
 
-        Cost next = current.next(costs.get(0));
+        Cost next = current.next(head(costs));
         Double newResult = next.operation(result);
 
-        return calcCost(next, newResult, costs.subList(1, costs.size()));
+        return calcCost(next, newResult, tail(costs));
+    }
+
+    private Cost head(List<? extends Cost> elements) {
+        return elements.get(0);
+    }
+
+    private List<? extends Cost> tail(List<? extends Cost> elements) {
+        return elements.subList(1, elements.size());
     }
 }
