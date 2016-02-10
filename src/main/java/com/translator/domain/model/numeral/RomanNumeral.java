@@ -1,39 +1,42 @@
 package com.translator.domain.model.numeral;
 
+import com.translator.domain.model.calculator.Credits;
+
 import java.util.List;
 
+import static com.translator.domain.model.calculator.Credits.credits;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 public enum RomanNumeral implements Cost {
 
-    M(1000.0),
-    D(500.0),
-    C(100.0, canBeSubtractedFrom(M,D)),
-    L(50.0),
-    X(10.0, canBeSubtractedFrom(C,L)),
-    V(5.0),
-    I(1.0, canBeSubtractedFrom(X,V));
+    M(credits(1000.0)),
+    D(credits(500.0)),
+    C(credits(100.0), canBeSubtractedFrom(M,D)),
+    L(credits(50.0)),
+    X(credits(10.0), canBeSubtractedFrom(C,L)),
+    V(credits(5.0)),
+    I(credits(1.0), canBeSubtractedFrom(X,V));
 
-    private Double value;
+    private Credits value;
     private List<? extends Cost> canSubtract;
 
-    RomanNumeral(Double value) {
+    RomanNumeral(Credits value) {
         this.value = value;
         this.canSubtract = emptyList();
     }
 
-    RomanNumeral(Double value, List<? extends Cost> canSubtract) {
+    RomanNumeral(Credits value, List<? extends Cost> canSubtract) {
         this.value = value;
         this.canSubtract = canSubtract;
     }
 
-    public Double value() {
+    public Credits value() {
         return value;
     }
 
-    public Double operation(Double number) {
-        return value() + number;
+    public Credits operation(Credits number) {
+        return value().plus(number);
     }
 
     public Cost next(Cost nextElement) {
@@ -51,15 +54,15 @@ public enum RomanNumeral implements Cost {
     }
 
     private Cost formula(final Cost numeral) {
-        final Double val = value();
+        final Credits val = value();
 
         return new Cost() {
-            public Double value() {
-                return (numeral.value() - (2 * val));
+            public Credits value() {
+                return numeral.value().minus(val.multipliedByTwo());
             }
 
-            public Double operation(Double number) {
-                return value() + number;
+            public Credits operation(Credits number) {
+                return value().plus(number);
             }
 
             public Cost next(Cost nextElement) {
@@ -70,6 +73,6 @@ public enum RomanNumeral implements Cost {
     }
 
     public boolean greaterThanOrEqualTo(RomanNumeral anotherNumeral) {
-        return this.value >= anotherNumeral.value;
+        return this.value.greaterThanOrEqualTo(anotherNumeral.value);
     }
 }

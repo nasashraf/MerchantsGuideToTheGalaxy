@@ -2,7 +2,7 @@ package com.translator.application;
 
 import com.translator.application.test.doubles.MaterialPricePerUnitSpy;
 import com.translator.application.test.doubles.ValidatorSpy;
-import com.translator.domain.model.material.Material;
+import com.translator.domain.model.numeral.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.translator.domain.model.calculator.Credits.credits;
-import static com.translator.domain.model.material.Material.aMaterial;
+import static com.translator.domain.model.numeral.Material.aMaterial;
 import static com.translator.domain.model.numeral.RomanNumeral.*;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;

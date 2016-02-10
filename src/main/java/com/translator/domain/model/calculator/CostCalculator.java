@@ -4,25 +4,24 @@ import com.translator.domain.model.numeral.Cost;
 
 import java.util.List;
 
-public class CostCalculator {
+public class CostCalculator implements Calculator {
 
     public Credits calculate(List<? extends Cost> elements) {
-
-        return new Credits(calcCost(head(elements), head(elements).operation(0.0), tail(elements)));
+        return calcCost(head(elements), head(elements).operation(Credits.credits(0.0)), tail(elements));
     }
 
-    private Double calcCost(Cost current, Double result, List<? extends Cost> costs) {
-        if (costs.isEmpty()) return result;
+    private Credits calcCost(Cost current, Credits currentTotal, List<? extends Cost> costs) {
+        if (costs.isEmpty()) return currentTotal;
 
-        if (costs.size() == 1) {
-            Cost more = current.next(head(costs));
-            return more.operation(result);
+        Cost nextElement = current.next(head(costs));
+
+        if (lastElement(costs)) {
+            return nextElement.operation(currentTotal);
         }
 
-        Cost next = current.next(head(costs));
-        Double newResult = next.operation(result);
+        Credits result = nextElement.operation(currentTotal);
 
-        return calcCost(next, newResult, tail(costs));
+        return calcCost(nextElement, result, tail(costs));
     }
 
     private Cost head(List<? extends Cost> elements) {
@@ -31,5 +30,9 @@ public class CostCalculator {
 
     private List<? extends Cost> tail(List<? extends Cost> elements) {
         return elements.subList(1, elements.size());
+    }
+
+    private boolean lastElement(List<? extends Cost> costs) {
+        return costs.size() == 1;
     }
 }

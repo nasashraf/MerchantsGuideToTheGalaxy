@@ -19,8 +19,16 @@ public class Credits {
         return new Credits(this.amount * amount);
     }
 
+    public Credits multipliedBy(Credits another) {
+        return new Credits(this.amount * another.amount);
+    }
+
     public Credits dividedBy(Double decimalAmount) {
         return new Credits(amount / decimalAmount);
+    }
+
+    public Credits dividedBy(Credits another) {
+        return new Credits(amount / another.amount);
     }
 
     @Override
@@ -46,5 +54,25 @@ public class Credits {
     @Override
     public String toString() {
         return "Credits(" + amount + ")";
+    }
+
+    public Credits plus(Credits another) {
+        return new Credits(this.amount + another.amount);
+    }
+
+    public Credits minus(Credits another) {
+        return new Credits(this.amount - another.amount);
+    }
+
+    public Credits multipliedByTwo() {
+        return new Credits(amount * 2);
+    }
+
+    public boolean greaterThanOrEqualTo(Credits value) {
+        return this.amount >= value.amount;
+    }
+
+    public boolean lessThan(Credits another) {
+        return this.amount < another.amount;
     }
 }

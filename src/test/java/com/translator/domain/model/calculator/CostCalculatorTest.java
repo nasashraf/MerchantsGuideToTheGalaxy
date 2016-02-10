@@ -1,14 +1,14 @@
 package com.translator.domain.model.calculator;
 
 import com.translator.domain.model.numeral.Cost;
-import com.translator.domain.model.numeral.MaterialNew;
+import com.translator.domain.model.numeral.Material;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 
 import java.util.List;
 
 import static com.translator.domain.model.calculator.Credits.credits;
-import static com.translator.domain.model.numeral.MaterialNew.aMaterial;
+import static com.translator.domain.model.numeral.Material.aMaterial;
 import static com.translator.domain.model.numeral.RomanNumeral.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -81,8 +81,8 @@ public class CostCalculatorTest {
         assertThat(costOf(M,M,M,M,C,M,X,C,I,X, materialWorth(5.0)), isWorth(credits(24995.0)));
     }
 
-    private MaterialNew materialWorth(Double worth) {
-        return aMaterial("", worth);
+    private Material materialWorth(Double worth) {
+        return aMaterial("", Credits.credits(worth));
     }
 
     private Credits costOf(Cost... costs) {

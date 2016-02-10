@@ -1,8 +1,8 @@
 package com.translator.application;
 
 import com.translator.domain.model.calculator.Calculator;
-import com.translator.domain.model.calculator.CreditsCalculator;
-import com.translator.domain.model.material.Material;
+import com.translator.domain.model.calculator.CostCalculator;
+import com.translator.domain.model.numeral.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
 import com.translator.domain.model.validation.RomanNumeralValidator;
 import com.translator.domain.model.validation.Validator;
@@ -20,11 +20,11 @@ public class IntergalacticWorthCalculationProcessor {
     private Validator validator;
 
 
-    public IntergalacticWorthCalculationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material > materialsByName) {
+    public IntergalacticWorthCalculationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {
         this.intergalacticToRoman = intergalacticToRoman;
         this.materialsByName = materialsByName;
 
-        creditsCalculator = new CreditsCalculator();
+        creditsCalculator = new CostCalculator();
         validator = new RomanNumeralValidator();
         console = new Screen();
     }

@@ -1,7 +1,8 @@
 package com.translator.domain.model.material;
 
+import com.translator.domain.model.calculator.CostCalculator;
 import com.translator.domain.model.calculator.Credits;
-import com.translator.domain.model.numeral.RomanNumeralAmount;
+import com.translator.domain.model.numeral.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
 
 import java.util.List;
@@ -9,9 +10,9 @@ import java.util.List;
 public class MaterialPricePerUnit {
 
     public Material material(List<RomanNumeral> romanNumerals, String materialName, Credits cost) {
-        RomanNumeralAmount romanNumeralAmount = new RomanNumeralAmount(romanNumerals);
+        CostCalculator costCalculator = new CostCalculator();
 
-        Credits pricePerUnit = cost.dividedBy(romanNumeralAmount.decimalValue());
+        Credits pricePerUnit = cost.dividedBy(costCalculator.calculate(romanNumerals));
 
         return new Material(materialName, pricePerUnit);
     }

@@ -1,7 +1,7 @@
 package com.translator.application;
 
 import com.translator.domain.model.calculator.Calculator;
-import com.translator.domain.model.calculator.CreditsCalculator;
+import com.translator.domain.model.calculator.CostCalculator;
 import com.translator.domain.model.numeral.RomanNumeral;
 import com.translator.domain.model.validation.RomanNumeralValidator;
 import com.translator.domain.model.validation.Validator;
@@ -25,7 +25,7 @@ public abstract class AbstractAnsweringService implements AnsweringService {
     private Map<String, RomanNumeral> intergalacticToRoman;
 
     public AbstractAnsweringService(Map<String, RomanNumeral> intergalacticToRoman) {
-        this.creditsCalculator = new CreditsCalculator();
+        this.creditsCalculator = new CostCalculator();
         this.validator = new RomanNumeralValidator();
         this.intergalacticToRoman = intergalacticToRoman;
     }

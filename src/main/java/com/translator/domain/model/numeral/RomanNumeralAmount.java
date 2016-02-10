@@ -41,7 +41,7 @@ public class RomanNumeralAmount {
 
     private Double calculateDecimalValue(Double total, List<RomanNumeral> romanNumerals) {
         if (romanNumerals.isEmpty()) return total;
-        if (romanNumerals.size() == 1) return total + romanNumerals.get(0).value();
+//        if (romanNumerals.size() == 1) return total + romanNumerals.get(0).value();
 
         RomanNumeral firstSymbol = getSymbolFom(romanNumerals, AT_FIRST_POSITION);
         RomanNumeral secondSymbol = getSymbolFom(romanNumerals, AT_SECOND_POSITION);
@@ -54,7 +54,7 @@ public class RomanNumeralAmount {
             index= NEXT_TWO_POSITIONS;
             currentTotal += SUBTRACTION_NUMERAL_VALUES.get(firstPairOfNumerals);
         } else {
-            currentTotal += firstSymbol.value();
+//            currentTotal += firstSymbol.value();
         }
 
         return calculateDecimalValue(currentTotal, tailFrom(index, romanNumerals));

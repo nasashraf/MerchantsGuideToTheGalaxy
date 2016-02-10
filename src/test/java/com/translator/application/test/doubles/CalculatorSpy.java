@@ -2,8 +2,7 @@ package com.translator.application.test.doubles;
 
 import com.translator.domain.model.calculator.Calculator;
 import com.translator.domain.model.calculator.Credits;
-import com.translator.domain.model.material.Material;
-import com.translator.domain.model.numeral.RomanNumeralAmount;
+import com.translator.domain.model.numeral.Cost;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,17 +11,15 @@ import java.util.List;
 public class CalculatorSpy implements Calculator {
 
     private Credits amount;
-    public List<RomanNumeralAmount> romanNumeralAmountCalledWith;
-    public List<Material> materialCalledWith;
+    public List<List<? extends Cost>> romanNumeralAmountCalledWith;
 
     public CalculatorSpy() {
-        romanNumeralAmountCalledWith = new ArrayList<RomanNumeralAmount>();
-        materialCalledWith = new ArrayList<Material>();
+        this.romanNumeralAmountCalledWith = new ArrayList<List<? extends Cost>>();
     }
 
-    public Credits calculate(RomanNumeralAmount romanNumeralAmount, Material material) {
-        romanNumeralAmountCalledWith.add(romanNumeralAmount);
-        materialCalledWith.add(material);
+
+    public Credits calculate(List<? extends Cost> elements) {
+        romanNumeralAmountCalledWith.add(elements);
 
         return amount;
     }

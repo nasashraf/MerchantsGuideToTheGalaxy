@@ -1,6 +1,7 @@
 package com.translator.domain.model.material;
 
 import com.translator.domain.model.calculator.Credits;
+import com.translator.domain.model.numeral.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
 import org.junit.Test;
 
@@ -8,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.translator.domain.model.calculator.Credits.credits;
-import static com.translator.domain.model.material.Material.aMaterial;
+import static com.translator.domain.model.numeral.Material.aMaterial;
 import static com.translator.domain.model.material.MaterialPricePerUnitTest.MaterialBuilder.aMaterialCalled;
 import static com.translator.domain.model.numeral.RomanNumeral.*;
 import static org.hamcrest.MatcherAssert.assertThat;

@@ -3,8 +3,11 @@ package com.translator.application;
 import com.translator.application.test.doubles.CalculatorSpy;
 import com.translator.application.test.doubles.ConsoleSpy;
 import com.translator.application.test.doubles.ValidatorSpy;
-import com.translator.domain.model.material.Material;
+import com.translator.domain.model.numeral.Cost;
+import com.translator.domain.model.numeral.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,12 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.translator.application.IntergalacticWorthCalculationProcessorTest.CostMatcher.containsCost;
 import static com.translator.domain.model.calculator.Credits.credits;
-import static com.translator.domain.model.material.Material.aMaterial;
-import static com.translator.domain.model.numeral.RomanNumeral.I;
-import static com.translator.domain.model.numeral.RomanNumeral.V;
-import static com.translator.domain.model.numeral.RomanNumeral.X;
-import static com.translator.domain.model.numeral.RomanNumeralAmount.aRomanNumeralAmount;
+import static com.translator.domain.model.numeral.Material.aMaterial;
+import static com.translator.domain.model.numeral.RomanNumeral.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -72,10 +73,10 @@ public class IntergalacticWorthCalculationProcessorTest {
         assertThat(consoleSpy.outputsWritten.size(), is(1));
         assertThat(consoleSpy.outputsWritten, contains("glob Silver is 10.0 Credits"));
 
-        assertThat(calculatorSpy.romanNumeralAmountCalledWith, contains(aRomanNumeralAmount(I)));
-        assertThat(calculatorSpy.materialCalledWith, contains(aMaterial("Silver", credits(10.0))));
+        assertThat(calculatorSpy.romanNumeralAmountCalledWith, containsCost(asList(I, aMaterial("Silver", credits(10.0)))));
         assertThat(validatorSpy.romanNumeralsCalledWithInOrder, contains(asList(I)));
     }
+
 
     @Test public void
     answerGiven_WhenMultipleQuestionAreForOneIntergalacticQuantityForMaterial() {
@@ -92,8 +93,7 @@ public class IntergalacticWorthCalculationProcessorTest {
         assertThat(consoleSpy.outputsWritten.size(), is(1));
         assertThat(consoleSpy.outputsWritten, contains("prok glob Silver is 10.0 Credits"));
 
-        assertThat(calculatorSpy.romanNumeralAmountCalledWith, contains(aRomanNumeralAmount(V,I)));
-        assertThat(calculatorSpy.materialCalledWith, contains(aMaterial("Silver", credits(10.0))));
+        assertThat(calculatorSpy.romanNumeralAmountCalledWith, containsCost(asList(V,I, aMaterial("Silver", credits(10.0)))));
         assertThat(validatorSpy.romanNumeralsCalledWithInOrder, contains(asList(V,I)));
     }
 
@@ -119,12 +119,8 @@ public class IntergalacticWorthCalculationProcessorTest {
         assertThat(validatorSpy.romanNumeralsCalledWithInOrder, contains(asList(I)
                                                                         ,asList(I,V)));
 
-        assertThat(calculatorSpy.romanNumeralAmountCalledWith, contains(aRomanNumeralAmount(I)
-                                                                       ,aRomanNumeralAmount(I,V)));
-
-        assertThat(calculatorSpy.materialCalledWith, contains(aMaterial("Silver", credits(10.0))
-                                                             ,aMaterial("Gold", credits(20.0))));
-
+        assertThat(calculatorSpy.romanNumeralAmountCalledWith, containsCost(asList(I, aMaterial("Silver", credits(10.0))),
+                                                                            asList(I, V, aMaterial("Gold", credits(20.0)))));
     }
 
     @Test public void
@@ -141,8 +137,7 @@ public class IntergalacticWorthCalculationProcessorTest {
         assertThat(consoleSpy.outputsWritten.size(), is(1));
         assertThat(consoleSpy.outputsWritten, contains("prok glob is 6.0"));
 
-        assertThat(calculatorSpy.romanNumeralAmountCalledWith, contains(aRomanNumeralAmount(V,I)));
-        assertThat(calculatorSpy.materialCalledWith, contains(aMaterial("", credits(1.0))));
+        assertThat(calculatorSpy.romanNumeralAmountCalledWith, containsCost(asList(V,I)));
         assertThat(validatorSpy.romanNumeralsCalledWithInOrder, contains(asList(V,I)));
     }
 
@@ -201,4 +196,33 @@ public class IntergalacticWorthCalculationProcessorTest {
 
         assertThat(consoleSpy.outputsWritten, contains("I have no idea what you are talking about"));
     }
+
+
+    public static class CostMatcher extends TypeSafeMatcher<List<List<? extends Cost>>> {
+
+        private List<List<? extends Cost>> expected;
+
+        public CostMatcher(List<List<? extends Cost>> expected) {
+            this.expected = expected;
+        }
+
+        public static CostMatcher containsCost(List<? extends Cost>... costs) {
+            return new CostMatcher(asList(costs));
+        }
+
+        @Override
+        protected boolean matchesSafely(List<List<? extends Cost>> actual) {
+            return expected.equals(actual);
+        }
+
+        public void describeTo(Description description) {
+            description.appendText(expected.toString());
+
+        }
+
+
+    }
+
+
 }
+

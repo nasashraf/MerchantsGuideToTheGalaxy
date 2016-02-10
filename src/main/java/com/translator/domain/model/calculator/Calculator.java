@@ -1,9 +1,10 @@
 package com.translator.domain.model.calculator;
 
-import com.translator.domain.model.material.Material;
-import com.translator.domain.model.numeral.RomanNumeralAmount;
+import com.translator.domain.model.numeral.Cost;
+
+import java.util.List;
 
 public interface Calculator {
 
-    public Credits calculate(RomanNumeralAmount romanNumeralAmount, Material material);
+    public Credits calculate(List<? extends Cost> elements);
 }
