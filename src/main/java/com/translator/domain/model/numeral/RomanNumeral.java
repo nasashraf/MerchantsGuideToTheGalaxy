@@ -49,6 +49,10 @@ public enum RomanNumeral implements Cost {
         return next;
     }
 
+    public boolean greaterThanOrEqualTo(RomanNumeral anotherNumeral) {
+        return this.value.greaterThanOrEqualTo(anotherNumeral.value);
+    }
+
     private static List<? extends Cost> canBeSubtractedFrom(RomanNumeral... numerals) {
         return asList(numerals);
     }
@@ -68,11 +72,6 @@ public enum RomanNumeral implements Cost {
             public Cost next(Cost nextElement) {
                 return nextElement;
             }
-
         };
-    }
-
-    public boolean greaterThanOrEqualTo(RomanNumeral anotherNumeral) {
-        return this.value.greaterThanOrEqualTo(anotherNumeral.value);
     }
 }

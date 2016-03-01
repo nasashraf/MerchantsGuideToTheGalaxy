@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface Calculator {
 
-    public Credits calculate(List<? extends Cost> elements);
+    Credits calculate(List<? extends Cost> elements);
 }

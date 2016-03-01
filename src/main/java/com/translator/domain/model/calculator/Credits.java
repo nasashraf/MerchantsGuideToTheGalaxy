@@ -15,16 +15,8 @@ public class Credits {
         return amount.toString();
     }
 
-    public Credits multipliedBy(Double amount) {
-        return new Credits(this.amount * amount);
-    }
-
     public Credits multipliedBy(Credits another) {
         return new Credits(this.amount * another.amount);
-    }
-
-    public Credits dividedBy(Double decimalAmount) {
-        return new Credits(amount / decimalAmount);
     }
 
     public Credits dividedBy(Credits another) {

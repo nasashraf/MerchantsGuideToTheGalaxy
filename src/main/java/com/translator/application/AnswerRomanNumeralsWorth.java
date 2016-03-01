@@ -1,7 +1,7 @@
 package com.translator.application;
 
-import com.translator.domain.model.calculator.CostCalculator;
 import com.translator.domain.model.calculator.Credits;
+import com.translator.domain.model.numeral.Cost;
 import com.translator.domain.model.numeral.RomanNumeral;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class AnswerRomanNumeralsWorth extends AbstractAnsweringService {
         try {
             String quantityText = extractQuestionDetails(question);
 
-            List<RomanNumeral> numeralQuantities = romanNumeralsFrom(quantityText);
+            List<? extends Cost> numeralQuantities = romanNumeralsFrom(quantityText);
 
             answer = answerText(quantityText, creditsCalculator().calculate(numeralQuantities));
         } catch (TranslationException te) {

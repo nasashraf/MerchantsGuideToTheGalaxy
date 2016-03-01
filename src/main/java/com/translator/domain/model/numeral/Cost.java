@@ -9,4 +9,5 @@ public interface Cost {
     Credits operation(Credits number);
 
     Cost next(Cost nextElement);
+
 }

@@ -6,6 +6,8 @@ import static com.translator.domain.model.calculator.Credits.credits;
 
 public class Material implements Cost {
 
+    public static Material NO_MATERIAL = new Material("", Credits.credits(1.0));
+
     private Credits costPerUnit;
     private String name;
 
@@ -30,14 +32,6 @@ public class Material implements Cost {
         return nextElement;
     }
 
-    @Override
-    public String toString() {
-        return "Material{" +
-                "costPerUnit=" + costPerUnit +
-                ", name='" + name + '\'' +
-                '}';
-    }
-
     public String name() {
         return name;
     }
@@ -59,5 +53,13 @@ public class Material implements Cost {
         int result = costPerUnit.hashCode();
         result = 31 * result + name.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Material{" +
+                "costPerUnit=" + costPerUnit +
+                ", name='" + name + '\'' +
+                '}';
     }
 }
