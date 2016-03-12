@@ -1,7 +1,7 @@
 package com.translator.application;
 
 import com.translator.domain.model.calculator.Credits;
-import com.translator.domain.model.material.MaterialPricePerUnit;
+import com.translator.domain.model.material.MaterialFactory;
 import com.translator.domain.model.numeral.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
 import com.translator.domain.model.validation.RomanNumeralValidator;
@@ -21,12 +21,12 @@ public class MaterialsAdapter {
     public static final int MATERIAL_NAME_AND_AMOUNT_POS = 0;
     public static final int TOTAL_CREDITS_COST_POS = 1;
     private final Map<String, RomanNumeral> intergalacticToRoman;
-    private MaterialPricePerUnit materialPricePerUnit;
+    private MaterialFactory materialFactory;
     private Validator validator;
 
     public MaterialsAdapter(Map<String, RomanNumeral> intergalacticToRoman) {
         this.intergalacticToRoman = intergalacticToRoman;
-        materialPricePerUnit = new MaterialPricePerUnit();
+        materialFactory = new MaterialFactory();
         validator = new RomanNumeralValidator();
     }
 
@@ -46,7 +46,7 @@ public class MaterialsAdapter {
                 throw new MaterialsAdapterException();
             }
 
-            Material material = materialPricePerUnit.material(numerals, materialName, amountInCredits);
+            Material material = materialFactory.createUsing(numerals, materialName, amountInCredits);
             materials.put(materialName, material);
         }
 
@@ -95,8 +95,8 @@ public class MaterialsAdapter {
         return materialCostTranslation.split(" is ");
     }
 
-    protected void setMaterialPricePerUnit(MaterialPricePerUnit materialPricePerUnit) {
-        this.materialPricePerUnit = materialPricePerUnit;
+    protected void setMaterialFactory(MaterialFactory materialFactory) {
+        this.materialFactory = materialFactory;
     }
 
     protected void setValidator(Validator validator) {

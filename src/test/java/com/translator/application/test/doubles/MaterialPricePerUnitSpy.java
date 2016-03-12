@@ -1,7 +1,7 @@
 package com.translator.application.test.doubles;
 
 import com.translator.domain.model.calculator.Credits;
-import com.translator.domain.model.material.MaterialPricePerUnit;
+import com.translator.domain.model.material.MaterialFactory;
 import com.translator.domain.model.numeral.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
 
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class MaterialPricePerUnitSpy extends MaterialPricePerUnit {
+public class MaterialPricePerUnitSpy extends MaterialFactory {
 
     private Map<String, Material> materials;
     private List<List<RomanNumeral>> romanNumerals;
@@ -24,7 +24,7 @@ public class MaterialPricePerUnitSpy extends MaterialPricePerUnit {
     }
 
     @Override
-    public Material material(List<RomanNumeral> romanNumerals, String materialName, Credits cost) {
+    public Material createUsing(List<RomanNumeral> romanNumerals, String materialName, Credits cost) {
         this.romanNumerals.add(romanNumerals);
         this.materialName.add(materialName);
         this.cost.add(cost);

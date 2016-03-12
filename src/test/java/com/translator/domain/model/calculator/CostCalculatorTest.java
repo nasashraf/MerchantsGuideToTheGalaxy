@@ -1,9 +1,7 @@
 package com.translator.domain.model.calculator;
 
 import com.translator.domain.model.numeral.Cost;
-import com.translator.domain.model.numeral.DivideMaterialCost;
-import com.translator.domain.model.numeral.Material;
-import com.translator.domain.model.numeral.MultiplyMaterialCost;
+import com.translator.domain.model.numeral.MaterialCost;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 
@@ -11,6 +9,9 @@ import java.util.List;
 
 import static com.translator.domain.model.calculator.Credits.credits;
 import static com.translator.domain.model.numeral.Material.aMaterial;
+import static com.translator.domain.model.numeral.MaterialCost.aMaterialCost;
+import static com.translator.domain.model.numeral.MaterialOperation.DIVIDE;
+import static com.translator.domain.model.numeral.MaterialOperation.MULTIPLY;
 import static com.translator.domain.model.numeral.RomanNumeral.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -93,20 +94,16 @@ public class CostCalculatorTest {
         assertThat(costOf(aCostWorth(credits(10.0)), dividedByMaterialWorth(2.5)), isWorth(credits(4.0)));
     }
 
-    private Material multipliedByMaterialWorth(Double worth) {
-        return aMaterial("", credits(worth), new MultiplyMaterialCost());
+    private MaterialCost multipliedByMaterialWorth(Double worth) {
+        return aMaterialCost(aMaterial("", credits(worth)), MULTIPLY);
     }
 
-    private Material dividedByMaterialWorth(Double worth) {
-        return aMaterial("", credits(worth), new DivideMaterialCost());
+    private MaterialCost dividedByMaterialWorth(Double worth) {
+        return aMaterialCost(aMaterial("", credits(worth)), DIVIDE);
     }
 
     private Cost aCostWorth(final Credits cost) {
         return new Cost() {
-            public Credits value() {
-                return cost;
-            }
-
             public Credits operation(Credits number) {
                 return cost;
             }

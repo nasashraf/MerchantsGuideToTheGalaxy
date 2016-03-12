@@ -7,9 +7,9 @@ import com.translator.domain.model.numeral.RomanNumeral;
 
 import java.util.List;
 
-public class MaterialPricePerUnit {
+public class MaterialFactory {
 
-    public Material material(List<RomanNumeral> romanNumerals, String materialName, Credits cost) {
+    public Material createUsing(List<RomanNumeral> romanNumerals, String materialName, Credits cost) {
         CostCalculator costCalculator = new CostCalculator();
 
         Credits pricePerUnit = cost.dividedBy(costCalculator.calculate(romanNumerals));

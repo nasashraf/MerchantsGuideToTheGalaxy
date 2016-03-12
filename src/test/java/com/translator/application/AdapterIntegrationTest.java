@@ -2,7 +2,6 @@ package com.translator.application;
 
 import com.translator.application.test.doubles.ConsoleSpy;
 import com.translator.domain.model.numeral.Material;
-import com.translator.domain.model.numeral.MultiplyMaterialCost;
 import com.translator.domain.model.numeral.RomanNumeral;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +44,7 @@ public class AdapterIntegrationTest {
         inputAdapter.adaptAndProcess(input);
 
         Map<String, RomanNumeral> expectedIntergalacticToRoman = MapBuilder.<String, RomanNumeral>aMapBuilder().put("glob", I).build();
-        Map<String, Material> expectedMaterialByName = MapBuilder.<String, Material>aMapBuilder().put("Silver", aMaterial("Silver", credits(17.0), new MultiplyMaterialCost())).build();
+        Map<String, Material> expectedMaterialByName = MapBuilder.<String, Material>aMapBuilder().put("Silver", aMaterial("Silver", credits(17.0))).build();
         List<String> expectedQuestions = createList("how many Credits is glob Silver ?");
 
         assertThat(questionsGenerated, equalTo(expectedQuestions));

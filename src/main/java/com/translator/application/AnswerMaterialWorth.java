@@ -1,13 +1,13 @@
 package com.translator.application;
 
 import com.translator.domain.model.calculator.Credits;
-import com.translator.domain.model.numeral.Cost;
-import com.translator.domain.model.numeral.Material;
-import com.translator.domain.model.numeral.RomanNumeral;
+import com.translator.domain.model.numeral.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.translator.domain.model.numeral.MaterialOperation.MULTIPLY;
 
 public class AnswerMaterialWorth extends AbstractAnsweringService {
 
@@ -32,7 +32,7 @@ public class AnswerMaterialWorth extends AbstractAnsweringService {
             String quantitiesText = quantitiesTextFrom(quantityAndMaterialText);
             List<Cost> costs = new ArrayList<Cost>();
             costs.addAll(romanNumeralsFrom(quantitiesText));
-            costs.add(material);
+            costs.add(new MaterialCost(material, MULTIPLY));
 
             Credits worth = creditsCalculator().calculate(costs);
 

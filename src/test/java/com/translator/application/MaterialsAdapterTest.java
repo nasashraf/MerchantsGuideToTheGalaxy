@@ -3,7 +3,6 @@ package com.translator.application;
 import com.translator.application.test.doubles.MaterialPricePerUnitSpy;
 import com.translator.application.test.doubles.ValidatorSpy;
 import com.translator.domain.model.numeral.Material;
-import com.translator.domain.model.numeral.MultiplyMaterialCost;
 import com.translator.domain.model.numeral.RomanNumeral;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +51,7 @@ public class MaterialsAdapterTest {
         materialsAdapter = new MaterialsAdapter(INTERGALACTIC_TO_ROMAN);
         materialPricePerUnitSpy = new MaterialPricePerUnitSpy();
         validatorSpy = new ValidatorSpy();
-        materialsAdapter.setMaterialPricePerUnit(materialPricePerUnitSpy);
+        materialsAdapter.setMaterialFactory(materialPricePerUnitSpy);
         materialsAdapter.setValidator(validatorSpy);
         materialCosts = new ArrayList<String>();
     }
@@ -67,7 +66,7 @@ public class MaterialsAdapterTest {
 
         materialCosts.add(materialCostText);
 
-        final Material materialStub = aMaterial(SILVER, credits(34.0), new MultiplyMaterialCost());
+        final Material materialStub = aMaterial(SILVER, credits(34.0));
         Map<String,Material> responseStub = new HashMap<String, Material>() {{
             put(SILVER, materialStub);
 
@@ -96,7 +95,7 @@ public class MaterialsAdapterTest {
 
         materialCosts.add(materialCostText);
 
-        final Material materialStub = aMaterial(SILVER, credits(17.0), new MultiplyMaterialCost());
+        final Material materialStub = aMaterial(SILVER, credits(17.0));
         Map<String,Material> responseStub = new HashMap<String, Material>() {{
             put(SILVER, materialStub);
 
@@ -126,7 +125,7 @@ public class MaterialsAdapterTest {
                 .build();
         materialCosts.add(materialCostText);
 
-        final Material materialStub = aMaterial(GOLD, credits(2.0), new MultiplyMaterialCost());
+        final Material materialStub = aMaterial(GOLD, credits(2.0));
         Map<String,Material> responseStub = new HashMap<String, Material>() {{
             put(GOLD, materialStub);
 
@@ -165,8 +164,8 @@ public class MaterialsAdapterTest {
         materialCosts.add(materialCostTextGold);
         materialCosts.add(materialCostTextSilver);
 
-        final Material goldStub = aMaterial(GOLD, credits(2.0), new MultiplyMaterialCost());
-        final Material silverStub = aMaterial(SILVER, credits(2.0), new MultiplyMaterialCost());
+        final Material goldStub = aMaterial(GOLD, credits(2.0));
+        final Material silverStub = aMaterial(SILVER, credits(2.0));
         Map<String,Material> responseStub = new HashMap<String, Material>() {{
             put(GOLD, goldStub);
             put(SILVER, silverStub);
@@ -197,7 +196,7 @@ public class MaterialsAdapterTest {
                 .build();
         materialCosts.add(materialCostText);
 
-        final Material materialStub = aMaterial(GOLD, credits(2.0), new MultiplyMaterialCost());
+        final Material materialStub = aMaterial(GOLD, credits(2.0));
         Map<String,Material> responseStub = new HashMap<String, Material>() {{
             put(GOLD, materialStub);
 

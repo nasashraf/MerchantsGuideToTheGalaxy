@@ -5,7 +5,6 @@ import com.translator.application.test.doubles.ConsoleSpy;
 import com.translator.application.test.doubles.ValidatorSpy;
 import com.translator.domain.model.numeral.Cost;
 import com.translator.domain.model.numeral.Material;
-import com.translator.domain.model.numeral.MultiplyMaterialCost;
 import com.translator.domain.model.numeral.RomanNumeral;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
@@ -20,6 +19,8 @@ import java.util.Map;
 import static com.translator.application.IntergalacticWorthCalculationProcessorTest.CostMatcher.containsCost;
 import static com.translator.domain.model.calculator.Credits.credits;
 import static com.translator.domain.model.numeral.Material.aMaterial;
+import static com.translator.domain.model.numeral.MaterialCost.aMaterialCost;
+import static com.translator.domain.model.numeral.MaterialOperation.MULTIPLY;
 import static com.translator.domain.model.numeral.RomanNumeral.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -63,7 +64,7 @@ public class IntergalacticWorthCalculationProcessorTest {
     @Test public void
     answerGiven_WhenSingleQuestionIsForOneIntergalacticQuantityForMaterial() {
         intergalacticToRoman.put("glob", I);
-        materialsByName.put("Silver", aMaterial("Silver", credits(10.0), new MultiplyMaterialCost()));
+        materialsByName.put("Silver", aMaterial("Silver", credits(10.0)));
 
         calculatorSpy.setCreditsAmount(credits(10.0));
         validatorSpy.setValidationResult(true);
@@ -74,7 +75,7 @@ public class IntergalacticWorthCalculationProcessorTest {
         assertThat(consoleSpy.outputsWritten.size(), is(1));
         assertThat(consoleSpy.outputsWritten, contains("glob Silver is 10.0 Credits"));
 
-        assertThat(calculatorSpy.romanNumeralAmountCalledWith, containsCost(asList(I, aMaterial("Silver", credits(10.0), new MultiplyMaterialCost()))));
+        assertThat(calculatorSpy.romanNumeralAmountCalledWith, containsCost(asList(I, aMaterialCost(aMaterial("Silver", credits(10.0)), MULTIPLY))));
         assertThat(validatorSpy.romanNumeralsCalledWithInOrder, contains(asList(I)));
     }
 
@@ -83,7 +84,7 @@ public class IntergalacticWorthCalculationProcessorTest {
     answerGiven_WhenMultipleQuestionAreForOneIntergalacticQuantityForMaterial() {
         intergalacticToRoman.put("glob", I);
         intergalacticToRoman.put("prok", V);
-        materialsByName.put("Silver", aMaterial("Silver", credits(10.0), new MultiplyMaterialCost()));
+        materialsByName.put("Silver", aMaterial("Silver", credits(10.0)));
 
         calculatorSpy.setCreditsAmount(credits(10.0));
         validatorSpy.setValidationResult(true);
@@ -94,7 +95,7 @@ public class IntergalacticWorthCalculationProcessorTest {
         assertThat(consoleSpy.outputsWritten.size(), is(1));
         assertThat(consoleSpy.outputsWritten, contains("prok glob Silver is 10.0 Credits"));
 
-        assertThat(calculatorSpy.romanNumeralAmountCalledWith, containsCost(asList(V,I, aMaterial("Silver", credits(10.0), new MultiplyMaterialCost()))));
+        assertThat(calculatorSpy.romanNumeralAmountCalledWith, containsCost(asList(V,I, aMaterialCost(aMaterial("Silver", credits(10.0)), MULTIPLY))));
         assertThat(validatorSpy.romanNumeralsCalledWithInOrder, contains(asList(V,I)));
     }
 
@@ -103,8 +104,8 @@ public class IntergalacticWorthCalculationProcessorTest {
         intergalacticToRoman.put("glob", I);
         intergalacticToRoman.put("prok", V);
 
-        materialsByName.put("Silver", aMaterial("Silver", credits(10.0), new MultiplyMaterialCost()));
-        materialsByName.put("Gold", aMaterial("Gold", credits(20.0), new MultiplyMaterialCost()));
+        materialsByName.put("Silver", aMaterial("Silver", credits(10.0)));
+        materialsByName.put("Gold", aMaterial("Gold", credits(20.0)));
 
         calculatorSpy.setCreditsAmount(credits(150.0));
         validatorSpy.setValidationResult(true);
@@ -120,8 +121,8 @@ public class IntergalacticWorthCalculationProcessorTest {
         assertThat(validatorSpy.romanNumeralsCalledWithInOrder, contains(asList(I)
                                                                         ,asList(I,V)));
 
-        assertThat(calculatorSpy.romanNumeralAmountCalledWith, containsCost(asList(I, aMaterial("Silver", credits(10.0), new MultiplyMaterialCost())),
-                                                                            asList(I, V, aMaterial("Gold", credits(20.0), new MultiplyMaterialCost()))));
+        assertThat(calculatorSpy.romanNumeralAmountCalledWith, containsCost(asList(I, aMaterialCost(aMaterial("Silver", credits(10.0)), MULTIPLY)),
+                                                                            asList(I, V, aMaterialCost(aMaterial("Gold", credits(20.0)), MULTIPLY))));
     }
 
     @Test public void
@@ -147,7 +148,7 @@ public class IntergalacticWorthCalculationProcessorTest {
         intergalacticToRoman.put("glob", I);
         intergalacticToRoman.put("prok", V);
         intergalacticToRoman.put("pish", X);
-        materialsByName.put("Silver", aMaterial("Silver", credits(10.0), new MultiplyMaterialCost()));
+        materialsByName.put("Silver", aMaterial("Silver", credits(10.0)));
 
         validatorSpy.setValidationResult(false);
 
@@ -160,7 +161,7 @@ public class IntergalacticWorthCalculationProcessorTest {
     @Test public void
     translationException_WhenMaterialDoesNotExist() {
         intergalacticToRoman.put("glob", I);
-        materialsByName.put("Silver", aMaterial("Silver", credits(10.0), new MultiplyMaterialCost()));
+        materialsByName.put("Silver", aMaterial("Silver", credits(10.0)));
 
         validatorSpy.setValidationResult(true);
 
@@ -173,7 +174,7 @@ public class IntergalacticWorthCalculationProcessorTest {
     @Test public void
     translationException_WhenRomanNumeralForIntergalacticQuantityDoesNotExist() {
         intergalacticToRoman.put("prok", V);
-        materialsByName.put("Silver", aMaterial("Silver", credits(10.0), new MultiplyMaterialCost()));
+        materialsByName.put("Silver", aMaterial("Silver", credits(10.0)));
 
         validatorSpy.setValidationResult(true);
 
@@ -186,7 +187,7 @@ public class IntergalacticWorthCalculationProcessorTest {
     @Test public void
     translationException_WhenBadlyFormattedQuestion() {
         intergalacticToRoman.put("glob", I);
-        materialsByName.put("Silver", aMaterial("Silver", credits(10.0), new MultiplyMaterialCost()));
+        materialsByName.put("Silver", aMaterial("Silver", credits(10.0)));
 
         calculatorSpy.setCreditsAmount(credits(10.0));
 

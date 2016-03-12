@@ -2,7 +2,6 @@ package com.translator.application;
 
 import com.translator.application.test.doubles.*;
 import com.translator.domain.model.numeral.Material;
-import com.translator.domain.model.numeral.MultiplyMaterialCost;
 import com.translator.domain.model.numeral.RomanNumeral;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,7 +58,7 @@ public class InputProcessingServiceTest {
         categories.put(QUESTIONS, questions);
 
         Map<String, RomanNumeral> intergalacticToRoman = MapBuilder.<String, RomanNumeral>aMapBuilder().put("glob", I).build();
-        Map<String, Material> materialByName = MapBuilder.<String, Material>aMapBuilder().put("Silver", aMaterial("Silver", credits(17.0), new MultiplyMaterialCost())).build();
+        Map<String, Material> materialByName = MapBuilder.<String, Material>aMapBuilder().put("Silver", aMaterial("Silver", credits(17.0))).build();
 
         inputCategoriserSpy.setCategoriesStub(categories);
         intergalacticToRomanAdapterSpy.setIntergalacticToRomanStub(intergalacticToRoman);

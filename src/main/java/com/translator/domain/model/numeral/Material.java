@@ -2,6 +2,8 @@ package com.translator.domain.model.numeral;
 
 import com.translator.domain.model.calculator.Credits;
 
+import static com.translator.domain.model.numeral.MaterialOperation.MULTIPLY;
+
 public class Material implements Cost {
 
     private Credits costPerUnit;
@@ -17,11 +19,11 @@ public class Material implements Cost {
     public Material(String name, Credits costPerUnit) {
         this.name = name;
         this.costPerUnit = costPerUnit;
-        this.materialOperation = new MultiplyMaterialCost();
+        this.materialOperation = MULTIPLY;
     }
 
-    public static Material aMaterial(String name, Credits costPerUnit, MaterialOperation operation) {
-        return new Material(name, costPerUnit, operation);
+    public static Material aMaterial(String name, Credits costPerUnit) {
+        return new Material(name, costPerUnit);
     }
 
     public Credits operation(Credits number) {
@@ -34,6 +36,10 @@ public class Material implements Cost {
 
     public String name() {
         return name;
+    }
+
+    public Credits cost() {
+        return costPerUnit;
     }
 
     @Override

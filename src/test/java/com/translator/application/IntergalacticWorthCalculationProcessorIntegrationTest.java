@@ -1,7 +1,6 @@
 package com.translator.application;
 
 import com.translator.domain.model.numeral.Material;
-import com.translator.domain.model.numeral.MultiplyMaterialCost;
 import com.translator.domain.model.numeral.RomanNumeral;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +31,7 @@ public class IntergalacticWorthCalculationProcessorIntegrationTest {
     public void
     answerCalculatedCorrectly() {
         intergalacticToRoman.put("glob", I);
-        materialsByName.put("Silver", aMaterial("Silver", credits(10.0), new MultiplyMaterialCost()));
+        materialsByName.put("Silver", aMaterial("Silver", credits(10.0)));
 
         String answer = answerMaterialWorth.calculateWorth("how many Credits is glob Silver ?");
 
@@ -44,7 +43,7 @@ public class IntergalacticWorthCalculationProcessorIntegrationTest {
         intergalacticToRoman.put("glob", I);
         intergalacticToRoman.put("prok", V);
         intergalacticToRoman.put("pish", X);
-        materialsByName.put("Silver", aMaterial("Silver", credits(10.0), new MultiplyMaterialCost()));
+        materialsByName.put("Silver", aMaterial("Silver", credits(10.0)));
 
         String answer = answerMaterialWorth.calculateWorth("how many Credits is glob prok pish Silver ?");
 
