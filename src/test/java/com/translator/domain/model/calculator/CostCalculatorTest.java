@@ -1,7 +1,9 @@
 package com.translator.domain.model.calculator;
 
 import com.translator.domain.model.numeral.Cost;
+import com.translator.domain.model.numeral.DivideMaterialCost;
 import com.translator.domain.model.numeral.Material;
+import com.translator.domain.model.numeral.MultiplyMaterialCost;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 
@@ -61,28 +63,58 @@ public class CostCalculatorTest {
 
     @Test public void
     worthWithMaterialIsValueOfMaterialMultipliedByAmount_ForDifferentAmountsExpressedInRomanNUmerals() {
-        assertThat(costOf(I, materialWorth(2.0)), isWorth(credits(2.0)));
-        assertThat(costOf(V, materialWorth(2.0)), isWorth(credits(10.0)));
-        assertThat(costOf(X, materialWorth(2.0)), isWorth(credits(20.0)));
-        assertThat(costOf(L, materialWorth(2.0)), isWorth(credits(100.0)));
-        assertThat(costOf(C, materialWorth(2.0)), isWorth(credits(200.0)));
-        assertThat(costOf(D, materialWorth(2.0)), isWorth(credits(1000.0)));
-        assertThat(costOf(M, materialWorth(2.0)), isWorth(credits(2000.0)));
+        assertThat(costOf(I, multipliedByMaterialWorth(2.0)), isWorth(credits(2.0)));
+        assertThat(costOf(V, multipliedByMaterialWorth(2.0)), isWorth(credits(10.0)));
+        assertThat(costOf(X, multipliedByMaterialWorth(2.0)), isWorth(credits(20.0)));
+        assertThat(costOf(L, multipliedByMaterialWorth(2.0)), isWorth(credits(100.0)));
+        assertThat(costOf(C, multipliedByMaterialWorth(2.0)), isWorth(credits(200.0)));
+        assertThat(costOf(D, multipliedByMaterialWorth(2.0)), isWorth(credits(1000.0)));
+        assertThat(costOf(M, multipliedByMaterialWorth(2.0)), isWorth(credits(2000.0)));
 
 
-        assertThat(costOf(I,I, materialWorth(2.0)), isWorth(credits(4.0)));
-        assertThat(costOf(I,V, materialWorth(2.0)), isWorth(credits(8.0)));
-        assertThat(costOf(I,X, materialWorth(2.0)), isWorth(credits(18.0)));
-        assertThat(costOf(X,L, materialWorth(2.0)), isWorth(credits(80.0)));
-        assertThat(costOf(X,C, materialWorth(2.0)), isWorth(credits(180.0)));
-        assertThat(costOf(C,D, materialWorth(2.0)), isWorth(credits(800.0)));
-        assertThat(costOf(C,M, materialWorth(2.0)), isWorth(credits(1800.0)));
+        assertThat(costOf(I,I, multipliedByMaterialWorth(2.0)), isWorth(credits(4.0)));
+        assertThat(costOf(I,V, multipliedByMaterialWorth(2.0)), isWorth(credits(8.0)));
+        assertThat(costOf(I,X, multipliedByMaterialWorth(2.0)), isWorth(credits(18.0)));
+        assertThat(costOf(X,L, multipliedByMaterialWorth(2.0)), isWorth(credits(80.0)));
+        assertThat(costOf(X,C, multipliedByMaterialWorth(2.0)), isWorth(credits(180.0)));
+        assertThat(costOf(C,D, multipliedByMaterialWorth(2.0)), isWorth(credits(800.0)));
+        assertThat(costOf(C,M, multipliedByMaterialWorth(2.0)), isWorth(credits(1800.0)));
 
-        assertThat(costOf(M,M,M,M,C,M,X,C,I,X, materialWorth(5.0)), isWorth(credits(24995.0)));
+        assertThat(costOf(M,M,M,M,C,M,X,C,I,X, multipliedByMaterialWorth(5.0)), isWorth(credits(24995.0)));
     }
 
-    private Material materialWorth(Double worth) {
-        return aMaterial("", Credits.credits(worth));
+    @Test public void
+    worthWithMaterialIsValueOfMaterialDividedByAmount_ForDifferentAmountsExpressedInRomanNUmerals() {
+        assertThat(costOf(I, dividedByMaterialWorth(1.0)), isWorth(credits(1.0)));
+        assertThat(costOf(V, dividedByMaterialWorth(2.5)), isWorth(credits(2.0)));
+        assertThat(costOf(I,I, dividedByMaterialWorth(2.0)), isWorth(credits(1.0)));
+        assertThat(costOf(I,V, dividedByMaterialWorth(2.0)), isWorth(credits(2.0)));
+
+        assertThat(costOf(aCostWorth(credits(10.0)), dividedByMaterialWorth(2.5)), isWorth(credits(4.0)));
+    }
+
+    private Material multipliedByMaterialWorth(Double worth) {
+        return aMaterial("", credits(worth), new MultiplyMaterialCost());
+    }
+
+    private Material dividedByMaterialWorth(Double worth) {
+        return aMaterial("", credits(worth), new DivideMaterialCost());
+    }
+
+    private Cost aCostWorth(final Credits cost) {
+        return new Cost() {
+            public Credits value() {
+                return cost;
+            }
+
+            public Credits operation(Credits number) {
+                return cost;
+            }
+
+            public Cost next(Cost nextElement) {
+                return nextElement;
+            }
+        };
     }
 
     private Credits costOf(Cost... costs) {

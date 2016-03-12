@@ -23,6 +23,26 @@ public class Credits {
         return new Credits(amount / another.amount);
     }
 
+    public Credits plus(Credits another) {
+        return new Credits(this.amount + another.amount);
+    }
+
+    public Credits minus(Credits another) {
+        return new Credits(this.amount - another.amount);
+    }
+
+    public Credits multipliedByTwo() {
+        return new Credits(amount * 2);
+    }
+
+    public boolean greaterThanOrEqualTo(Credits value) {
+        return this.amount >= value.amount;
+    }
+
+    public boolean lessThan(Credits another) {
+        return this.amount < another.amount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -46,25 +66,5 @@ public class Credits {
     @Override
     public String toString() {
         return "Credits(" + amount + ")";
-    }
-
-    public Credits plus(Credits another) {
-        return new Credits(this.amount + another.amount);
-    }
-
-    public Credits minus(Credits another) {
-        return new Credits(this.amount - another.amount);
-    }
-
-    public Credits multipliedByTwo() {
-        return new Credits(amount * 2);
-    }
-
-    public boolean greaterThanOrEqualTo(Credits value) {
-        return this.amount >= value.amount;
-    }
-
-    public boolean lessThan(Credits another) {
-        return this.amount < another.amount;
     }
 }

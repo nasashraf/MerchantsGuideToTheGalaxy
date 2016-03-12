@@ -8,7 +8,7 @@ import static com.translator.domain.model.calculator.Credits.credits;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
-public enum RomanNumeral implements Cost {
+public enum RomanNumeral implements Numeral {
 
     M(credits(1000.0)),
     D(credits(500.0)),
@@ -19,14 +19,14 @@ public enum RomanNumeral implements Cost {
     I(credits(1.0), canBeSubtractedFrom(X,V));
 
     private Credits value;
-    private List<? extends Cost> canSubtract;
+    private List<RomanNumeral> canSubtract;
 
     RomanNumeral(Credits value) {
         this.value = value;
         this.canSubtract = emptyList();
     }
 
-    RomanNumeral(Credits value, List<? extends Cost> canSubtract) {
+    RomanNumeral(Credits value, List<RomanNumeral> canSubtract) {
         this.value = value;
         this.canSubtract = canSubtract;
     }
@@ -42,8 +42,10 @@ public enum RomanNumeral implements Cost {
     public Cost next(Cost nextElement) {
         Cost next = nextElement;
 
-        if (canSubtract.contains(nextElement)) {
-            next = formula(nextElement);
+        for(Numeral subtractableNumeral : canSubtract) {
+            if(subtractableNumeral.equals(nextElement)) {
+                next = formula(subtractableNumeral);
+            }
         }
 
         return next;
@@ -53,14 +55,14 @@ public enum RomanNumeral implements Cost {
         return this.value.greaterThanOrEqualTo(anotherNumeral.value);
     }
 
-    private static List<? extends Cost> canBeSubtractedFrom(RomanNumeral... numerals) {
+    private static List<RomanNumeral> canBeSubtractedFrom(RomanNumeral... numerals) {
         return asList(numerals);
     }
 
-    private Cost formula(final Cost numeral) {
+    private Cost formula(final Numeral numeral) {
         final Credits val = value();
 
-        return new Cost() {
+        return new Numeral() {
             public Credits value() {
                 return numeral.value().minus(val.multipliedByTwo());
             }
