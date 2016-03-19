@@ -2,36 +2,19 @@ package com.translator.domain.model.numeral;
 
 import com.translator.domain.model.calculator.Credits;
 
-import static com.translator.domain.model.numeral.MaterialOperation.MULTIPLY;
-
-public class Material implements Cost {
+public class Material  {
 
     private Credits costPerUnit;
     private String name;
-    private MaterialOperation materialOperation;
 
-    public Material(String name, Credits costPerUnit, MaterialOperation operation) {
-        this.name = name;
-        this.costPerUnit = costPerUnit;
-        this.materialOperation = operation;
-    }
 
     public Material(String name, Credits costPerUnit) {
         this.name = name;
         this.costPerUnit = costPerUnit;
-        this.materialOperation = MULTIPLY;
     }
 
     public static Material aMaterial(String name, Credits costPerUnit) {
         return new Material(name, costPerUnit);
-    }
-
-    public Credits operation(Credits number) {
-        return materialOperation.operate(costPerUnit, number);
-    }
-
-    public Cost next(Cost nextElement) {
-        return nextElement;
     }
 
     public String name() {
@@ -40,6 +23,10 @@ public class Material implements Cost {
 
     public Credits cost() {
         return costPerUnit;
+    }
+
+    public Credits costOf(Credits amount) {
+        return costPerUnit.multipliedBy(amount);
     }
 
     @Override

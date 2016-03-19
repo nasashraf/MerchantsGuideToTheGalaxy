@@ -1,27 +1,32 @@
 package com.translator.application;
 
 import com.translator.domain.model.calculator.Credits;
-import com.translator.domain.model.numeral.Cost;
 import com.translator.domain.model.numeral.RomanNumeral;
 
-import java.util.List;
 import java.util.Map;
 
 public class AnswerRomanNumeralsWorth extends AbstractAnsweringService {
 
+    private Map<String, RomanNumeral> intergalacticToRoman;
+
     public AnswerRomanNumeralsWorth(Map<String, RomanNumeral> intergalacticToRoman) {
         super(intergalacticToRoman);
+        this.intergalacticToRoman = intergalacticToRoman;
     }
 
     public String calculateWorth(String question) {
         String answer;
 
         try {
+            QuantityParser quantityParser = new QuantityParser(intergalacticToRoman);
+            quantityParser.setCalculator(creditsCalculator);
+            quantityParser.setValidator(validator);
+
             String quantityText = extractQuestionDetails(question);
 
-            List<? extends Cost> numeralQuantities = romanNumeralsFrom(quantityText);
+//            List<? extends Cost> numeralQuantities = romanNumeralsFrom(quantityText);
 
-            answer = answerText(quantityText, creditsCalculator().calculate(numeralQuantities));
+            answer = answerText(quantityText, quantityParser.quantityFrom(question));
         } catch (TranslationException te) {
             answer = "I have no idea what you are talking about";
         }

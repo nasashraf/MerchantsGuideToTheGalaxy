@@ -1,17 +1,12 @@
 package com.translator.domain.model.calculator;
 
 import com.translator.domain.model.numeral.Cost;
-import com.translator.domain.model.numeral.MaterialCost;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 
 import java.util.List;
 
 import static com.translator.domain.model.calculator.Credits.credits;
-import static com.translator.domain.model.numeral.Material.aMaterial;
-import static com.translator.domain.model.numeral.MaterialCost.aMaterialCost;
-import static com.translator.domain.model.numeral.MaterialOperation.DIVIDE;
-import static com.translator.domain.model.numeral.MaterialOperation.MULTIPLY;
 import static com.translator.domain.model.numeral.RomanNumeral.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -62,6 +57,7 @@ public class CostCalculatorTest {
         assertThat(costOf(M,M,M,M,C,M,X,C,I,X), isWorth(credits(4999.0)));
     }
 
+    /*
     @Test public void
     worthWithMaterialIsValueOfMaterialMultipliedByAmount_ForDifferentAmountsExpressedInRomanNUmerals() {
         assertThat(costOf(I, multipliedByMaterialWorth(2.0)), isWorth(credits(2.0)));
@@ -113,6 +109,7 @@ public class CostCalculatorTest {
             }
         };
     }
+ */
 
     private Credits costOf(Cost... costs) {
         List<? extends Cost> costsList = asList(costs);

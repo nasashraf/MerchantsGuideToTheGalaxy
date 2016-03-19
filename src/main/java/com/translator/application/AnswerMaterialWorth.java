@@ -1,17 +1,11 @@
 package com.translator.application;
 
 import com.translator.domain.model.calculator.Credits;
-import com.translator.domain.model.numeral.Cost;
 import com.translator.domain.model.numeral.Material;
-import com.translator.domain.model.numeral.MaterialCost;
 import com.translator.domain.model.numeral.RomanNumeral;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import static com.translator.domain.model.numeral.MaterialOperation.MULTIPLY;
-//import static com.translator.application.AnswerMaterialWorth.CostBuilder.romanNumerals;
 
 public class AnswerMaterialWorth extends AbstractAnsweringService {
 
@@ -33,7 +27,9 @@ public class AnswerMaterialWorth extends AbstractAnsweringService {
             Material material = createMaterial(quantityAndMaterialText);
             List<RomanNumeral> numerals = romanNumeralsFrom(quantitiesTextFrom(quantityAndMaterialText));
 
-            Credits worth = creditsCalculator().calculate(CostBuilder.romanNumerals(numerals).multipliedByCostOf(material));
+            Credits numeralAmount = creditsCalculator().calculate(numerals);
+
+            Credits worth = material.costOf(numeralAmount);
 
             answer = answerText(quantitiesTextFrom(quantityAndMaterialText), material.name(), worth.amount());
         } catch (TranslationException te) {
@@ -72,23 +68,4 @@ public class AnswerMaterialWorth extends AbstractAnsweringService {
         return quantities + " " + materialName + " is " + worthAmount + " Credits";
     }
 
-
-    private static class CostBuilder {
-        private List<Cost> costs;
-
-        public CostBuilder(List<RomanNumeral> materialName) {
-            costs = new ArrayList<Cost>();
-            costs.addAll(materialName);
-        }
-
-        public static CostBuilder romanNumerals(List<RomanNumeral> materialName) {
-            return new CostBuilder(materialName);
-        }
-
-        public List<Cost> multipliedByCostOf(Material material) {
-            MaterialCost materialCost = MaterialCost.aMaterialCost(material, MULTIPLY);
-            costs.add(materialCost);
-            return costs;
-        }
-    }
 }
