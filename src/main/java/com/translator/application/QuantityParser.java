@@ -10,15 +10,11 @@ import com.translator.domain.model.validation.Validator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
 
 public class QuantityParser {
 
-
-    private static final String EXTRACT_QUESTION_DETAILS = "(?<=\\sis\\s)(.*)[^?]";
     private static final String SINGLE_WHITE_SPACE = " ";
     private static final Object DOES_NOT_EXIST = null;
 
@@ -33,14 +29,7 @@ public class QuantityParser {
     }
 
     Credits quantityFrom(String quantityText) {
-        Pattern quantityAndMaterialNameRegexPattern = Pattern.compile(EXTRACT_QUESTION_DETAILS);
-        Matcher matcher = quantityAndMaterialNameRegexPattern.matcher(quantityText);
-
-        if (!matcher.find()) {
-            throw new TranslationException();
-        }
-
-        List<RomanNumeral> numerals = romanNumeralsFrom(matcher.group().trim());
+        List<RomanNumeral> numerals = romanNumeralsFrom(quantityText);
 
         if (!validator.validate(numerals)) {
             throw new TranslationException();
@@ -67,7 +56,6 @@ public class QuantityParser {
         return numeralQuantities;
     }
 
-    public class TranslationException extends RuntimeException { }
 
     protected void setCalculator(Calculator calculator) {
         this.creditsCalculator = calculator;

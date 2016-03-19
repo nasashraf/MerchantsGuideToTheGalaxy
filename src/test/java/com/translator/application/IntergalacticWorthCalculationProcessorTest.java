@@ -93,7 +93,6 @@ public class IntergalacticWorthCalculationProcessorTest {
         assertThat(consoleSpy.outputsWritten.size(), is(1));
         assertThat(consoleSpy.outputsWritten, contains("prok glob Silver is 100.0 Credits"));
 
-//        assertThat(calculatorSpy.romanNumeralAmountCalledWith, containsCost(asList(V,I, aMaterialCost(aMaterial("Silver", credits(10.0)), MULTIPLY))));
         assertThat(calculatorSpy.romanNumeralAmountCalledWith, containsCost(asList(V,I)));
         assertThat(validatorSpy.romanNumeralsCalledWithInOrder, contains(asList(V,I)));
     }

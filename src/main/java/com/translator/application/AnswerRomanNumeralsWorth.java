@@ -4,13 +4,17 @@ import com.translator.domain.model.calculator.Credits;
 import com.translator.domain.model.numeral.RomanNumeral;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AnswerRomanNumeralsWorth extends AbstractAnsweringService {
+
+    private static final String EXTRACT_QUESTION_DETAILS = "(?<=\\sis\\s)(.*)[^?]";
 
     private Map<String, RomanNumeral> intergalacticToRoman;
 
     public AnswerRomanNumeralsWorth(Map<String, RomanNumeral> intergalacticToRoman) {
-        super(intergalacticToRoman);
+        super();
         this.intergalacticToRoman = intergalacticToRoman;
     }
 
@@ -22,11 +26,16 @@ public class AnswerRomanNumeralsWorth extends AbstractAnsweringService {
             quantityParser.setCalculator(creditsCalculator);
             quantityParser.setValidator(validator);
 
-            String quantityText = extractQuestionDetails(question);
+            Pattern quantityAndMaterialNameRegexPattern = Pattern.compile(EXTRACT_QUESTION_DETAILS);
+            Matcher matcher = quantityAndMaterialNameRegexPattern.matcher(question);
 
-//            List<? extends Cost> numeralQuantities = romanNumeralsFrom(quantityText);
+            if (!matcher.find()) {
+                throw new TranslationException();
+            }
 
-            answer = answerText(quantityText, quantityParser.quantityFrom(question));
+            String quantityText = matcher.group().trim();
+
+            answer = answerText(quantityText, quantityParser.quantityFrom(quantityText));
         } catch (TranslationException te) {
             answer = "I have no idea what you are talking about";
         }

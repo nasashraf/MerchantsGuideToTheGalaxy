@@ -4,19 +4,23 @@ import com.translator.domain.model.calculator.Credits;
 import com.translator.domain.model.numeral.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
 
-import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AnswerMaterialWorth extends AbstractAnsweringService {
 
+    private static final String EXTRACT_QUESTION_DETAILS = "(?<=\\sis\\s)(.*)[^?]";
     public static final String SINGLE_WHITE_SPACE = " ";
     public static final Object DOES_NOT_EXIST = null;
 
     private Map<String, Material> materialsByNameLookup;
+    private Map<String, RomanNumeral> intergalacticToRoman;
 
     public AnswerMaterialWorth(Map<String, RomanNumeral> intergalacticToRomanTranslation, Map<String, Material> materialsByNameLookup) {
-        super(intergalacticToRomanTranslation);
+        super();
         this.materialsByNameLookup = materialsByNameLookup;
+        this.intergalacticToRoman = intergalacticToRomanTranslation;
     }
 
     public String calculateWorth(String question) {
@@ -25,9 +29,12 @@ public class AnswerMaterialWorth extends AbstractAnsweringService {
         try {
             String quantityAndMaterialText = extractQuestionDetails(question);
             Material material = createMaterial(quantityAndMaterialText);
-            List<RomanNumeral> numerals = romanNumeralsFrom(quantitiesTextFrom(quantityAndMaterialText));
 
-            Credits numeralAmount = creditsCalculator().calculate(numerals);
+            QuantityParser quantityParser = new QuantityParser(intergalacticToRoman);
+            quantityParser.setCalculator(creditsCalculator);
+            quantityParser.setValidator(validator);
+
+            Credits numeralAmount = quantityParser.quantityFrom(quantitiesTextFrom(quantityAndMaterialText));
 
             Credits worth = material.costOf(numeralAmount);
 
@@ -37,6 +44,22 @@ public class AnswerMaterialWorth extends AbstractAnsweringService {
         }
 
         return answer;
+    }
+
+
+    protected String extractQuestionDetails(String question) {
+        Pattern quantityAndMaterialNameRegexPattern = Pattern.compile(EXTRACT_QUESTION_DETAILS);
+        Matcher matcher = quantityAndMaterialNameRegexPattern.matcher(question);
+
+        if (!matcher.find()) {
+            throw new TranslationException();
+        }
+
+        return matcher.group().trim();
+    }
+    protected String quantitiesTextFrom(String quantityAndMaterialText) {
+        int endPosOfQuantitiesText = quantityAndMaterialText.lastIndexOf(SINGLE_WHITE_SPACE);
+        return quantityAndMaterialText.trim().substring(0, endPosOfQuantitiesText);
     }
 
     protected Material createMaterial(String materialDetails) {
