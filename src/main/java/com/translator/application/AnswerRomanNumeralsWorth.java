@@ -14,31 +14,20 @@ public class AnswerRomanNumeralsWorth implements AnsweringService {
     private static final String EXTRACT_QUESTION_DETAILS = "(?<=\\sis\\s)(.*)[^?]";
 
     private Map<String, RomanNumeral> intergalacticToRoman;
-    private Calculator creditsCalculator;
-    private Validator validator;
+    private QuantityParser quantityParser;
 
     public AnswerRomanNumeralsWorth(Map<String, RomanNumeral> intergalacticToRoman, Calculator creditsCalculator, Validator validator) {
         this.intergalacticToRoman = intergalacticToRoman;
-        this.creditsCalculator = creditsCalculator;
-        this.validator = validator;
+        quantityParser = new QuantityParser(intergalacticToRoman);
+        quantityParser.setCalculator(creditsCalculator);
+        quantityParser.setValidator(validator);
     }
 
     public String calculateWorth(String question) {
         String answer;
 
         try {
-            QuantityParser quantityParser = new QuantityParser(intergalacticToRoman);
-            quantityParser.setCalculator(creditsCalculator);
-            quantityParser.setValidator(validator);
-
-            Pattern quantityAndMaterialNameRegexPattern = Pattern.compile(EXTRACT_QUESTION_DETAILS);
-            Matcher matcher = quantityAndMaterialNameRegexPattern.matcher(question);
-
-            if (!matcher.find()) {
-                throw new TranslationException();
-            }
-
-            String quantityText = matcher.group().trim();
+            String quantityText = extractQuestionDetails(question);
 
             answer = answerText(quantityText, quantityParser.quantityFrom(quantityText));
         } catch (TranslationException te) {
@@ -48,7 +37,18 @@ public class AnswerRomanNumeralsWorth implements AnsweringService {
         return answer;
     }
 
-    protected String answerText(String quantities, Credits worth) {
+    private String extractQuestionDetails(String question) {
+        Pattern quantityAndMaterialNameRegexPattern = Pattern.compile(EXTRACT_QUESTION_DETAILS);
+        Matcher matcher = quantityAndMaterialNameRegexPattern.matcher(question);
+
+        if (!matcher.find()) {
+            throw new TranslationException();
+        }
+
+        return matcher.group().trim();
+    }
+
+    private String answerText(String quantities, Credits worth) {
         return quantities + " " + "is " + worth.amount();
     }
 

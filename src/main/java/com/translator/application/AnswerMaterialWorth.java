@@ -20,21 +20,22 @@ public class AnswerMaterialWorth implements AnsweringService {
 
     private Map<String, Material> materialsByNameLookup;
     private Map<String, RomanNumeral> intergalacticToRoman;
-    private Calculator creditsCalculator;
-    private Validator validator;
+    private QuantityParser quantityParser;
 
     public AnswerMaterialWorth(Map<String, RomanNumeral> intergalacticToRomanTranslation, Map<String, Material> materialsByNameLookup, Calculator creditsCalculator, Validator validator) {
         this.materialsByNameLookup = materialsByNameLookup;
         this.intergalacticToRoman = intergalacticToRomanTranslation;
-        this.creditsCalculator = creditsCalculator;
-        this.validator = validator;
+        quantityParser = new QuantityParser(intergalacticToRoman);
+        quantityParser.setCalculator(creditsCalculator);
+        quantityParser.setValidator(validator);
     }
 
     public AnswerMaterialWorth(Map<String, RomanNumeral> intergalacticToRomanTranslation, Map<String, Material> materialsByNameLookup) {
         this.materialsByNameLookup = materialsByNameLookup;
         this.intergalacticToRoman = intergalacticToRomanTranslation;
-        this.creditsCalculator = new CostCalculator();
-        this.validator = new RomanNumeralValidator();
+        quantityParser = new QuantityParser(intergalacticToRoman);
+        quantityParser.setCalculator(new CostCalculator());
+        quantityParser.setValidator(new RomanNumeralValidator());
     }
 
     public String calculateWorth(String question) {
@@ -42,15 +43,12 @@ public class AnswerMaterialWorth implements AnsweringService {
 
         try {
             String quantityAndMaterialText = extractQuestionDetails(question);
+
             Material material = createMaterial(quantityAndMaterialText);
 
-            QuantityParser quantityParser = new QuantityParser(intergalacticToRoman);
-            quantityParser.setCalculator(creditsCalculator);
-            quantityParser.setValidator(validator);
+            Credits amount = quantityParser.quantityFrom(quantitiesTextFrom(quantityAndMaterialText));
 
-            Credits numeralAmount = quantityParser.quantityFrom(quantitiesTextFrom(quantityAndMaterialText));
-
-            Credits worth = material.costOf(numeralAmount);
+            Credits worth = material.costOf(amount);
 
             answer = answerText(quantitiesTextFrom(quantityAndMaterialText), material.name(), worth.amount());
         } catch (TranslationException te) {
@@ -60,8 +58,7 @@ public class AnswerMaterialWorth implements AnsweringService {
         return answer;
     }
 
-
-    protected String extractQuestionDetails(String question) {
+    private String extractQuestionDetails(String question) {
         Pattern quantityAndMaterialNameRegexPattern = Pattern.compile(EXTRACT_QUESTION_DETAILS);
         Matcher matcher = quantityAndMaterialNameRegexPattern.matcher(question);
 
@@ -71,17 +68,14 @@ public class AnswerMaterialWorth implements AnsweringService {
 
         return matcher.group().trim();
     }
-    protected String quantitiesTextFrom(String quantityAndMaterialText) {
+
+    private String quantitiesTextFrom(String quantityAndMaterialText) {
         int endPosOfQuantitiesText = quantityAndMaterialText.lastIndexOf(SINGLE_WHITE_SPACE);
         return quantityAndMaterialText.trim().substring(0, endPosOfQuantitiesText);
     }
 
-    protected Material createMaterial(String materialDetails) {
-        return materialFrom(materialDetails);
-    }
-
-    private Material materialFrom(String quantityAndMaterialText) {
-        String materialName = materialNameFrom(quantityAndMaterialText);
+    private Material createMaterial(String materialDetails) {
+        String materialName = materialNameFrom(materialDetails);
         return getMaterialUsing(materialName);
     }
 
@@ -100,8 +94,7 @@ public class AnswerMaterialWorth implements AnsweringService {
         return material;
     }
 
-
-    protected String answerText(String quantities, String materialName, String worthAmount) {
+    private String answerText(String quantities, String materialName, String worthAmount) {
         return quantities + " " + materialName + " is " + worthAmount + " Credits";
     }
 
