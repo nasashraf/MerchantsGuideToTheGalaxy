@@ -8,7 +8,7 @@ import static com.translator.domain.model.calculator.Credits.credits;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
-public enum RomanNumeral implements Numeral {
+public enum RomanNumeral implements Cost {
 
     M(credits(1000.0)),
     D(credits(500.0)),
@@ -42,7 +42,7 @@ public enum RomanNumeral implements Numeral {
     public Cost next(Cost nextElement) {
         Cost next = nextElement;
 
-        for(Numeral subtractableNumeral : canSubtract) {
+        for(Cost subtractableNumeral : canSubtract) {
             if(subtractableNumeral.equals(nextElement)) {
                 next = formula(subtractableNumeral);
             }
@@ -59,10 +59,10 @@ public enum RomanNumeral implements Numeral {
         return asList(numerals);
     }
 
-    private Cost formula(final Numeral numeral) {
+    private Cost formula(final Cost numeral) {
         final Credits val = value();
 
-        return new Numeral() {
+        return new Cost() {
             public Credits value() {
                 return numeral.value().minus(val.multipliedByTwo());
             }

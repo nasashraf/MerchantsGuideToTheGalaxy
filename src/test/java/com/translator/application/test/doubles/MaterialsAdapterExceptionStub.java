@@ -1,7 +1,7 @@
 package com.translator.application.test.doubles;
 
 import com.translator.application.MaterialsAdapter;
-import com.translator.domain.model.numeral.Material;
+import com.translator.domain.model.material.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
 
 import java.util.List;

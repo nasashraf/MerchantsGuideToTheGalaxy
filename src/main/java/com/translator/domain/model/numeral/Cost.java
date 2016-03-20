@@ -8,4 +8,6 @@ public interface Cost {
 
     Cost next(Cost nextElement);
 
+    Credits value();
+
 }

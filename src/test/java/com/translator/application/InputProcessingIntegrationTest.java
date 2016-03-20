@@ -1,7 +1,7 @@
 package com.translator.application;
 
 import com.translator.application.test.doubles.ConsoleSpy;
-import com.translator.domain.model.numeral.Material;
+import com.translator.domain.model.material.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
 import org.junit.Before;
 import org.junit.Test;

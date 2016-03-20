@@ -1,4 +1,4 @@
-package com.translator.domain.model.numeral;
+package com.translator.domain.model.material;
 
 import com.translator.domain.model.calculator.Credits;
 

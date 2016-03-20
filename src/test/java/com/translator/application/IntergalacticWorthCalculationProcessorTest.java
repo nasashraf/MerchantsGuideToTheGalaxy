@@ -4,7 +4,7 @@ import com.translator.application.test.doubles.CalculatorSpy;
 import com.translator.application.test.doubles.ConsoleSpy;
 import com.translator.application.test.doubles.ValidatorSpy;
 import com.translator.domain.model.numeral.Cost;
-import com.translator.domain.model.numeral.Material;
+import com.translator.domain.model.material.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
@@ -18,7 +18,7 @@ import java.util.Map;
 
 import static com.translator.application.IntergalacticWorthCalculationProcessorTest.CostMatcher.containsCost;
 import static com.translator.domain.model.calculator.Credits.credits;
-import static com.translator.domain.model.numeral.Material.aMaterial;
+import static com.translator.domain.model.material.Material.aMaterial;
 import static com.translator.domain.model.numeral.RomanNumeral.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
