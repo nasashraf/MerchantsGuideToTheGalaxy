@@ -1,14 +1,18 @@
 package com.translator.application;
 
+import com.translator.domain.model.calculator.Calculator;
+import com.translator.domain.model.calculator.CostCalculator;
 import com.translator.domain.model.calculator.Credits;
 import com.translator.domain.model.numeral.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
+import com.translator.domain.model.validation.RomanNumeralValidator;
+import com.translator.domain.model.validation.Validator;
 
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AnswerMaterialWorth extends AbstractAnsweringService {
+public class AnswerMaterialWorth implements AnsweringService {
 
     private static final String EXTRACT_QUESTION_DETAILS = "(?<=\\sis\\s)(.*)[^?]";
     public static final String SINGLE_WHITE_SPACE = " ";
@@ -16,11 +20,21 @@ public class AnswerMaterialWorth extends AbstractAnsweringService {
 
     private Map<String, Material> materialsByNameLookup;
     private Map<String, RomanNumeral> intergalacticToRoman;
+    private Calculator creditsCalculator;
+    private Validator validator;
 
-    public AnswerMaterialWorth(Map<String, RomanNumeral> intergalacticToRomanTranslation, Map<String, Material> materialsByNameLookup) {
-        super();
+    public AnswerMaterialWorth(Map<String, RomanNumeral> intergalacticToRomanTranslation, Map<String, Material> materialsByNameLookup, Calculator creditsCalculator, Validator validator) {
         this.materialsByNameLookup = materialsByNameLookup;
         this.intergalacticToRoman = intergalacticToRomanTranslation;
+        this.creditsCalculator = creditsCalculator;
+        this.validator = validator;
+    }
+
+    public AnswerMaterialWorth(Map<String, RomanNumeral> intergalacticToRomanTranslation, Map<String, Material> materialsByNameLookup) {
+        this.materialsByNameLookup = materialsByNameLookup;
+        this.intergalacticToRoman = intergalacticToRomanTranslation;
+        this.creditsCalculator = new CostCalculator();
+        this.validator = new RomanNumeralValidator();
     }
 
     public String calculateWorth(String question) {

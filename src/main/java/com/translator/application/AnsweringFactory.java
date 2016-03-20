@@ -19,16 +19,13 @@ public class AnsweringFactory {
 
     public AnsweringService create(String question, Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName)  {
 
-        AbstractAnsweringService answeringService;
+        AnsweringService answeringService;
 
         if (question.trim().startsWith("how much is")) {
-            answeringService = new AnswerRomanNumeralsWorth(intergalacticToRoman);
+            answeringService = new AnswerRomanNumeralsWorth(intergalacticToRoman, creditsCalculator, validator);
         } else {
-            answeringService = new AnswerMaterialWorth(intergalacticToRoman, materialsByName);
+            answeringService = new AnswerMaterialWorth(intergalacticToRoman, materialsByName, creditsCalculator, validator);
         }
-
-        answeringService.setCalculator(creditsCalculator);
-        answeringService.setValidator(validator);
 
         return answeringService;
     }
