@@ -1,4 +1,4 @@
-package com.translator.application;
+package com.translator.application.adapters;
 
 import com.translator.domain.model.credits.Credits;
 import com.translator.domain.model.material.MaterialFactory;
@@ -95,11 +95,11 @@ public class MaterialsAdapter {
         return materialCostTranslation.split(" is ");
     }
 
-    protected void setMaterialFactory(MaterialFactory materialFactory) {
+    void setMaterialFactory(MaterialFactory materialFactory) {
         this.materialFactory = materialFactory;
     }
 
-    protected void setValidator(Validator validator) {
+    void setValidator(Validator validator) {
         this.validator = validator;
     }
 

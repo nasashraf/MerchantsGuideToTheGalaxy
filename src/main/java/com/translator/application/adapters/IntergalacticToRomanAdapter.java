@@ -1,4 +1,4 @@
-package com.translator.application;
+package com.translator.application.adapters;
 
 import com.translator.domain.model.numeral.RomanNumeral;
 

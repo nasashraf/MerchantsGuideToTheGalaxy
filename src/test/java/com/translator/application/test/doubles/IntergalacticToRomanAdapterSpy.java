@@ -1,6 +1,6 @@
 package com.translator.application.test.doubles;
 
-import com.translator.application.IntergalacticToRomanAdapter;
+import com.translator.application.adapters.IntergalacticToRomanAdapter;
 import com.translator.domain.model.numeral.RomanNumeral;
 
 import java.util.List;

@@ -1,5 +1,7 @@
 package com.translator.application;
 
+import com.translator.application.adapters.IntergalacticToRomanAdapter;
+import com.translator.application.adapters.MaterialsAdapter;
 import com.translator.domain.model.material.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
 import com.translator.infrastructure.Screen;
