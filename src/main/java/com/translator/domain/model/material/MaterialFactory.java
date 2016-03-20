@@ -1,7 +1,7 @@
 package com.translator.domain.model.material;
 
 import com.translator.domain.model.calculator.CostCalculator;
-import com.translator.domain.model.calculator.Credits;
+import com.translator.domain.model.credits.Credits;
 import com.translator.domain.model.numeral.RomanNumeral;
 
 import java.util.List;

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.translator.application.InputCategoriser.*;
-import static com.translator.domain.model.calculator.Credits.credits;
+import static com.translator.domain.model.credits.Credits.credits;
 import static com.translator.domain.model.material.Material.aMaterial;
 import static com.translator.domain.model.numeral.RomanNumeral.I;
 import static org.hamcrest.MatcherAssert.assertThat;

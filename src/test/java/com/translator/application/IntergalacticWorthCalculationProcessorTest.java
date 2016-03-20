@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.translator.application.IntergalacticWorthCalculationProcessorTest.CostMatcher.containsCost;
-import static com.translator.domain.model.calculator.Credits.credits;
+import static com.translator.domain.model.credits.Credits.credits;
 import static com.translator.domain.model.material.Material.aMaterial;
 import static com.translator.domain.model.numeral.RomanNumeral.*;
 import static java.util.Arrays.asList;

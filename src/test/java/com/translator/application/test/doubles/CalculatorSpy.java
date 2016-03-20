@@ -1,7 +1,7 @@
 package com.translator.application.test.doubles;
 
-import com.translator.domain.model.calculator.Calculator;
-import com.translator.domain.model.calculator.Credits;
+import com.translator.application.Calculator;
+import com.translator.domain.model.credits.Credits;
 import com.translator.domain.model.numeral.Cost;
 
 import java.util.ArrayList;

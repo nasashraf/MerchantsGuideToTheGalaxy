@@ -1,4 +1,4 @@
-package com.translator.domain.model.calculator;
+package com.translator.domain.model.credits;
 
 public class Credits {
     private Double amount;

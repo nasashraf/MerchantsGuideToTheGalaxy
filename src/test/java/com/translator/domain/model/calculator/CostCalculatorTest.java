@@ -1,12 +1,13 @@
 package com.translator.domain.model.calculator;
 
+import com.translator.domain.model.credits.Credits;
 import com.translator.domain.model.numeral.Cost;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 
 import java.util.List;
 
-import static com.translator.domain.model.calculator.Credits.credits;
+import static com.translator.domain.model.credits.Credits.credits;
 import static com.translator.domain.model.numeral.RomanNumeral.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;

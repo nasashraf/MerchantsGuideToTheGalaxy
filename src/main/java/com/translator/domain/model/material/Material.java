@@ -1,6 +1,6 @@
 package com.translator.domain.model.material;
 
-import com.translator.domain.model.calculator.Credits;
+import com.translator.domain.model.credits.Credits;
 
 public class Material  {
 

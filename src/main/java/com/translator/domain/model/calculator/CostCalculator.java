@@ -1,5 +1,7 @@
 package com.translator.domain.model.calculator;
 
+import com.translator.application.Calculator;
+import com.translator.domain.model.credits.Credits;
 import com.translator.domain.model.numeral.Cost;
 
 import java.util.List;
