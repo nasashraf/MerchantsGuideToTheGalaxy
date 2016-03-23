@@ -1,6 +1,6 @@
 package com.translator.application;
 
-import com.translator.domain.model.calculator.CostCalculator;
+import com.translator.domain.model.numeral.RomanNumeralCalculator;
 import com.translator.domain.model.credits.Credits;
 import com.translator.domain.model.material.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
@@ -33,7 +33,7 @@ public class AnswerMaterialWorth implements AnsweringService {
         this.materialsByNameLookup = materialsByNameLookup;
         this.intergalacticToRoman = intergalacticToRomanTranslation;
         quantityParser = new QuantityParser(intergalacticToRoman);
-        quantityParser.setCalculator(new CostCalculator());
+        quantityParser.setCalculator(new RomanNumeralCalculator());
         quantityParser.setValidator(new RomanNumeralValidator());
     }
 

@@ -1,7 +1,6 @@
-package com.translator.domain.model.calculator;
+package com.translator.domain.model.numeral;
 
 import com.translator.domain.model.credits.Credits;
-import com.translator.domain.model.numeral.Cost;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 
@@ -115,7 +114,7 @@ public class CostCalculatorTest {
     private Credits costOf(Cost... costs) {
         List<? extends Cost> costsList = asList(costs);
 
-        CostCalculator costCalculator = new CostCalculator();
+        RomanNumeralCalculator costCalculator = new RomanNumeralCalculator();
 
         Credits calculate = costCalculator.calculate(costsList);
         return calculate;

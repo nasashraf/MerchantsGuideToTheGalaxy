@@ -1,6 +1,6 @@
 package com.translator.application;
 
-import com.translator.domain.model.calculator.CostCalculator;
+import com.translator.domain.model.numeral.RomanNumeralCalculator;
 import com.translator.domain.model.credits.Credits;
 import com.translator.domain.model.numeral.RomanNumeral;
 import com.translator.domain.model.validation.RomanNumeralValidator;
@@ -22,7 +22,7 @@ public class QuantityParser {
     private Map<String, RomanNumeral> intergalacticToRoman;
 
     QuantityParser(Map<String, RomanNumeral> intergalacticToRoman) {
-        this.creditsCalculator = new CostCalculator();
+        this.creditsCalculator = new RomanNumeralCalculator();
         this.validator = new RomanNumeralValidator();
         this.intergalacticToRoman = intergalacticToRoman;
     }

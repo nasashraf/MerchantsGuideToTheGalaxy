@@ -1,12 +1,11 @@
-package com.translator.domain.model.calculator;
+package com.translator.domain.model.numeral;
 
 import com.translator.application.Calculator;
 import com.translator.domain.model.credits.Credits;
-import com.translator.domain.model.numeral.Cost;
 
 import java.util.List;
 
-public class CostCalculator implements Calculator {
+public class RomanNumeralCalculator implements Calculator {
 
     public Credits calculate(List<? extends Cost> elements) {
         return calcCost(head(elements), head(elements).operation(Credits.credits(0.0)), tail(elements));
