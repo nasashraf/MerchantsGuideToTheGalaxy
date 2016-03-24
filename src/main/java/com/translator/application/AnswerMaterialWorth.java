@@ -1,11 +1,8 @@
 package com.translator.application;
 
-import com.translator.domain.model.numeral.RomanNumeralCalculator;
 import com.translator.domain.model.credits.Credits;
 import com.translator.domain.model.material.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
-import com.translator.domain.model.validation.RomanNumeralValidator;
-import com.translator.domain.model.validation.Validator;
 
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -21,20 +18,10 @@ public class AnswerMaterialWorth implements AnsweringService {
     private Map<String, RomanNumeral> intergalacticToRoman;
     private QuantityParser quantityParser;
 
-    public AnswerMaterialWorth(Map<String, RomanNumeral> intergalacticToRomanTranslation, Map<String, Material> materialsByNameLookup, Calculator creditsCalculator, Validator validator) {
-        this.materialsByNameLookup = materialsByNameLookup;
-        this.intergalacticToRoman = intergalacticToRomanTranslation;
-        quantityParser = new QuantityParser(intergalacticToRoman);
-        quantityParser.setCalculator(creditsCalculator);
-        quantityParser.setValidator(validator);
-    }
 
-    public AnswerMaterialWorth(Map<String, RomanNumeral> intergalacticToRomanTranslation, Map<String, Material> materialsByNameLookup) {
+    public AnswerMaterialWorth(Map<String, Material> materialsByNameLookup, QuantityParser quantityParser) {
         this.materialsByNameLookup = materialsByNameLookup;
-        this.intergalacticToRoman = intergalacticToRomanTranslation;
-        quantityParser = new QuantityParser(intergalacticToRoman);
-        quantityParser.setCalculator(new RomanNumeralCalculator());
-        quantityParser.setValidator(new RomanNumeralValidator());
+        this.quantityParser = quantityParser;
     }
 
     public String calculateWorth(String question) {

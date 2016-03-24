@@ -2,6 +2,8 @@ package com.translator.application;
 
 import com.translator.domain.model.material.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
+import com.translator.domain.model.numeral.RomanNumeralCalculator;
+import com.translator.domain.model.validation.RomanNumeralValidator;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,7 +26,11 @@ public class IntergalacticWorthCalculationProcessorIntegrationTest {
     public void createSUT() {
         intergalacticToRoman = new HashMap<String, RomanNumeral>();
         materialsByName = new HashMap<String, Material>();
-        answerMaterialWorth = new AnswerMaterialWorth(intergalacticToRoman, materialsByName);
+
+        QuantityParser quantityParser = new QuantityParser(intergalacticToRoman);
+        quantityParser.setCalculator(new RomanNumeralCalculator());
+        quantityParser.setValidator(new RomanNumeralValidator());
+        answerMaterialWorth = new AnswerMaterialWorth(materialsByName, quantityParser);
     }
 
     @Test

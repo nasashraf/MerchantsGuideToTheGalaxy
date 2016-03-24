@@ -1,5 +1,6 @@
 package com.translator.application;
 
+import com.translator.domain.model.numeral.Calculator;
 import com.translator.domain.model.numeral.RomanNumeralCalculator;
 import com.translator.domain.model.material.Material;
 import com.translator.domain.model.numeral.RomanNumeral;

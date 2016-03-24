@@ -1,6 +1,7 @@
 package com.translator.application;
 
 import com.translator.domain.model.material.Material;
+import com.translator.domain.model.numeral.Calculator;
 import com.translator.domain.model.numeral.RomanNumeral;
 import com.translator.domain.model.validation.Validator;
 
@@ -20,10 +21,14 @@ public class AnsweringFactory {
 
         AnsweringService answeringService;
 
+        QuantityParser quantityParser = new QuantityParser(intergalacticToRoman);
+        quantityParser.setCalculator(creditsCalculator);
+        quantityParser.setValidator(validator);
+
         if (question.trim().startsWith("how much is")) {
-            answeringService = new AnswerRomanNumeralsWorth(intergalacticToRoman, creditsCalculator, validator);
+            answeringService = new AnswerRomanNumeralsWorth(quantityParser);
         } else {
-            answeringService = new AnswerMaterialWorth(intergalacticToRoman, materialsByName, creditsCalculator, validator);
+            answeringService = new AnswerMaterialWorth(materialsByName, quantityParser);
         }
 
         return answeringService;

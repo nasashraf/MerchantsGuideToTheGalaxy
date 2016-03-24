@@ -1,6 +1,6 @@
 package com.translator.application.test.doubles;
 
-import com.translator.application.Calculator;
+import com.translator.domain.model.numeral.Calculator;
 import com.translator.domain.model.credits.Credits;
 import com.translator.domain.model.numeral.Cost;
 
