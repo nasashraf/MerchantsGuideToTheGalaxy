@@ -1,11 +1,7 @@
 package com.translator.application;
 
-import com.translator.domain.model.numeral.Calculator;
-import com.translator.domain.model.numeral.RomanNumeralCalculator;
 import com.translator.domain.model.material.Material;
 import com.translator.domain.model.numeral.RomanNumeral;
-import com.translator.domain.model.validation.RomanNumeralValidator;
-import com.translator.domain.model.validation.Validator;
 import com.translator.infrastructure.Screen;
 
 import java.util.List;
@@ -16,22 +12,20 @@ public class IntergalacticWorthCalculationProcessor {
     private Map<String, RomanNumeral> intergalacticToRoman;
     private Map<String, Material> materialsByName;
     private Console console;
-    private Calculator creditsCalculator;
-    private Validator validator;
+    private AbstractRomanNumeralFactory romanNumeralFactory;
 
 
     public IntergalacticWorthCalculationProcessor(Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName) {
         this.intergalacticToRoman = intergalacticToRoman;
         this.materialsByName = materialsByName;
 
-        creditsCalculator = new RomanNumeralCalculator();
-        validator = new RomanNumeralValidator();
+        romanNumeralFactory = new ProductionRomanNumeralFactory();
         console = new Screen();
     }
 
     public void process(List<String> questions) {
         for (String question : questions) {
-            AnsweringFactory factory = new AnsweringFactory(creditsCalculator, validator);
+            AnsweringFactory factory = new AnsweringFactory(romanNumeralFactory);
 
             AnsweringService answeringService = factory.create(question, intergalacticToRoman, materialsByName);
 
@@ -45,11 +39,7 @@ public class IntergalacticWorthCalculationProcessor {
         this.console = console;
     }
 
-    protected void setCalculator(Calculator calculator) {
-        this.creditsCalculator = calculator;
-    }
-
-    protected void setValidator(Validator validator) {
-        this.validator = validator;
+    protected void setRomanNumeralFactory(AbstractRomanNumeralFactory romanNumeralFactory) {
+        this.romanNumeralFactory = romanNumeralFactory;
     }
 }

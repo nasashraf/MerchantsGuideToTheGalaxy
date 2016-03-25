@@ -2,6 +2,7 @@ package com.translator.application;
 
 import com.translator.application.test.doubles.CalculatorSpy;
 import com.translator.application.test.doubles.ConsoleSpy;
+import com.translator.application.test.doubles.TestRomanNumeralFactory;
 import com.translator.application.test.doubles.ValidatorSpy;
 import com.translator.domain.model.numeral.Cost;
 import com.translator.domain.model.material.Material;
@@ -48,8 +49,7 @@ public class IntergalacticWorthCalculationProcessorTest {
 
         intergalacticTranslationProcessor = new IntergalacticWorthCalculationProcessor(intergalacticToRoman, materialsByName);
         intergalacticTranslationProcessor.setConsole(consoleSpy);
-        intergalacticTranslationProcessor.setCalculator(calculatorSpy);
-        intergalacticTranslationProcessor.setValidator(validatorSpy);
+        intergalacticTranslationProcessor.setRomanNumeralFactory(new TestRomanNumeralFactory(calculatorSpy, validatorSpy));
     }
 
     @Test public void

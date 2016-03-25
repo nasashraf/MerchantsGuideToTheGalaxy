@@ -1,20 +1,16 @@
 package com.translator.application;
 
 import com.translator.domain.model.material.Material;
-import com.translator.domain.model.numeral.Calculator;
 import com.translator.domain.model.numeral.RomanNumeral;
-import com.translator.domain.model.validation.Validator;
 
 import java.util.Map;
 
 public class AnsweringFactory {
 
-    private Calculator creditsCalculator;
-    private Validator validator;
+    private AbstractRomanNumeralFactory romanNumeralFactory;
 
-    public AnsweringFactory(Calculator creditsCalculator, Validator validator) {
-        this.creditsCalculator = creditsCalculator;
-        this.validator = validator;
+    public AnsweringFactory(AbstractRomanNumeralFactory romanNumeralFactory) {
+        this.romanNumeralFactory = romanNumeralFactory;
     }
 
     public AnsweringService create(String question, Map<String, RomanNumeral> intergalacticToRoman, Map<String, Material> materialsByName)  {
@@ -22,8 +18,8 @@ public class AnsweringFactory {
         AnsweringService answeringService;
 
         QuantityParser quantityParser = new QuantityParser(intergalacticToRoman);
-        quantityParser.setCalculator(creditsCalculator);
-        quantityParser.setValidator(validator);
+        quantityParser.setCalculator(romanNumeralFactory.createCalculator());
+        quantityParser.setValidator(romanNumeralFactory.createValidator());
 
         if (question.trim().startsWith("how much is")) {
             answeringService = new AnswerRomanNumeralsWorth(quantityParser);
